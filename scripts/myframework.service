@@ -3,7 +3,7 @@ Description=My Flask Framework
 
 [Service]
 Type=forking
-ExecStart=/git/framework/run.sh --start
+ExecStart=/git/myframework/run.sh --start
 ExecReload=
 ExecStop=/git/myframework/run.sh --stop
 Restart=on-failure
