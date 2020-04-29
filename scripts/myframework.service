@@ -1,0 +1,15 @@
+[Unit]
+Description=My Flask Framework
+
+[Service]
+Type=forking
+ExecStart=/git/framework/run.sh --start
+ExecReload=
+ExecStop=/git/myframework/run.sh --stop
+Restart=on-failure
+RestartSec=42s
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=graphical.target
+

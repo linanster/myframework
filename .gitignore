@@ -1,0 +1,22 @@
+# Customize
+
+# 1.general ignore
+**/*.py[cdo]
+**/*.swp
+**/*.sqlite3
+**/*.sqlite
+**/__pycache__
+
+# 2.ignore folder
+log/*
+scripts/ignore/*
+sqlite/*
+venv/
+
+# 3.ignore specified file
+
+# 4.exceptions that not ignore
+!log/.gitkeep
+!scripts/ignore/.gitkeep
+!sqlite/.gitkeep
+
