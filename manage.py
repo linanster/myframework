@@ -1,7 +1,7 @@
 # coding:utf8
 #
 from flask_script import Manager
-from app.app import create_app
+from app import create_app
 
 app = create_app()
 
@@ -29,5 +29,6 @@ def get_sqlite(key, field):
     from app.models.sqlite import Sysinfo
     print(Sysinfo.query.filter_by(key=key).first().get(field))
 
+# python3 manage.py runserver -h 0.0.0.0 -p 5000 -r -d
 if __name__ == '__main__':
     manager.run()

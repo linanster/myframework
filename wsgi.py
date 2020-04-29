@@ -1,6 +1,6 @@
 # coding:utf8
 #
-from app.app import create_app
+from app import create_app
 import sys
 
 print('==sys.version==',sys.version)
@@ -17,3 +17,7 @@ def get_now_timestamp():
 def timeformat(timestamp):
     import time
     return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp))
+
+
+if __name__ == '__main__':
+    application_framework.run(host='0.0.0.0', port=5000, debug=True)

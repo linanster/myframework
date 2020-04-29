@@ -1,5 +1,3 @@
-#coding:utf8
-#
 from flask import Flask
 from app.models import init_models
 from app.views import init_views
