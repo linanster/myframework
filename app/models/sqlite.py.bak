@@ -5,7 +5,6 @@ db_sqlite = SQLAlchemy(use_native_unicode='utf8')
 
 
 class MyBaseModel(db_sqlite.Model):
-    __abstract__ = True
     id = db_sqlite.Column(db_sqlite.Integer, nullable=False, autoincrement=True, primary_key=True)
     def save(self):
         try:
@@ -51,25 +50,17 @@ class Student(MyBaseModel):
     name = db_sqlite.Column(db_sqlite.String(100))
     age = db_sqlite.Column(db_sqlite.Integer)
     exampass = db_sqlite.Column(db_sqlite.Boolean)
-    # enrolltime = db_sqlite.Column(db_sqlite.DateTime)
-    # enrolltime = db_sqlite.Column(db_sqlite.DateTime, default=datetime.datetime.datetime.now())
-    enrolltime = db_sqlite.Column(db_sqlite.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
-    def __init__(self, name, age, exampass):
+    enrolltime = db_sqlite.Column(db_sqlite.DateTime, default=datetime.datetime.now())
+    def __init__(self, name, age, exampass, enrolldate):
         self.name = name
         self.age = age
         self.exampass = exampass
-        # self.enrolldate = enrolldate
+        self.enrolldate = enrolldate
     @staticmethod
     def seed():
-        # date_obj_1 = datetime.datetime(2020, 5, 8, 19, 40, 0)
-        # date_str_1 = date_obj_1.strftime('%Y-%m-%d %H:%M:%S')
-        # date_str_2 = '2020-05-08 19:40:00'
-        # s1 = Student('allen', 29, False, date_obj_1)
-        # s2 = Student('nan', 32, True, date_str_1)
-        # s3 = Student('jun', 33, False, date_str_2)
-        s1 = Student('allen', 29, False)
-        s2 = Student('nan', 32, True)
-        s3 = Student('jun', 33, False)
+        s1 = Student('allen', 29, False, datetime.datetime.now())
+        s2 = Student('nan', 32, True, datetime.datetime.now())
+        s3 = Student('jun', 33, False, datetime.datetime.now())
         seeds = [s1, s2, s3] 
         db_sqlite.session.add_all(seeds)
         db_sqlite.session.commit()
