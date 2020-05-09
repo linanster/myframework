@@ -112,6 +112,7 @@ class ResourceStudentSingle(Resource):
 
   
 class ResourceStudentList(Resource):
+
     @marshal_with(fields_student_list_response)
     def get(self):
         response_status = 200
@@ -124,6 +125,26 @@ class ResourceStudentList(Resource):
         }
         return response_obj      
 
+    @marshal_with(fields_student_list_response)
+    def post(self):
+        r_name = request.form.get('name', type=str)
+        r_age = request.form.get('age', type=int)
+        r_exampass = request.form.get('exampass', type=bool)
+        data = Student()
+        data.name = r_name
+        data.age = r_age
+        data.exampass = r_exampass
+        if not data.save():
+            abort(400)
+        response_status = 200
+        response_msg = 'post student with name {} success'.format(r_name)
+        response_obj = {
+            'status': response_status,
+            'msg': response_msg,
+            'data': data
+        }
+        return response_obj
+        
 
 
 ##############################
@@ -131,7 +152,7 @@ class ResourceStudentList(Resource):
 ##############################
 
 api_db_student.add_resource(ResourceStudentSingle, '/<int:id>')
-api_db_student.add_resource(ResourceStudentList, '/all')
+api_db_student.add_resource(ResourceStudentList, '/all', '/add')
 
 
 
