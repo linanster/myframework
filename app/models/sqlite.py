@@ -5,16 +5,28 @@ db_sqlite = SQLAlchemy(use_native_unicode='utf8')
 
 
 class MyBaseModel(db_sqlite.Model):
+
     __abstract__ = True
+
     id = db_sqlite.Column(db_sqlite.Integer, nullable=False, autoincrement=True, primary_key=True)
+
     def save(self):
         try:
-            db.session.add(self)
-            db.session.commit()
+            db_sqlite.session.add(self)
+            db_sqlite.session.commit()
             return True
         except Exception as e:
             print(e)
             return False
+
+    def delete(self):
+        try:
+            db_sqlite.session.delete(self)
+            db_sqlite.session.commit()
+            return True
+        except Exception as e:
+            print(e)
+            return False            
 
 
 # class Sysinfo(db_sqlite.Model):

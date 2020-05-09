@@ -1,3 +1,5 @@
 def init_apis(app):
-    from app.apis.api_test import apitest
-    apitest.init_app(app)
+    from app.apis.api_test import api_test
+    from app.apis.api_db_student import api_db_student
+    api_test.init_app(app)
+    api_db_student.init_app(app)

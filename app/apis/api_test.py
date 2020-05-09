@@ -1,6 +1,6 @@
 from flask_restful import Api, Resource
 
-apitest = Api(prefix='/api/test/')
+api_test = Api(prefix='/api/test/')
 
 class ResourceTest(Resource):
     def get(self):
@@ -9,4 +9,4 @@ class ResourceTest(Resource):
         return {'msg':'hello api post'}
 
 
-apitest.add_resource(ResourceTest, '/')
+api_test.add_resource(ResourceTest, '/')
