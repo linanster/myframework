@@ -1,5 +1,5 @@
 from flask import request, abort
-from flask_restful import Api, Resource, fields, marshal_with, marshal
+from flask_restful import Api, Resource, fields, marshal_with, marshal, reqparse
 
 from app.models.sqlite import Student
 
@@ -7,14 +7,14 @@ api_db_student = Api(prefix='/api/db/student/')
 
 
 #####################################################################
-### 1. fields definition, for marshal (custom object serializing) ###
+### 1.1 fields definition, for marshal (custom object serializing) ###
 #####################################################################
 
 fields_student_single_db = {
     'name': fields.String,
     'age': fields.Integer,
     'exampass': fields.Boolean,
-    'enrolltime': fields.DateTime(dt_format='iso8601')
+    'updatetime': fields.DateTime(dt_format='iso8601')
 }
 
 fields_student_single_response = {
@@ -28,6 +28,16 @@ fields_student_list_response = {
     'msg': fields.String,
     'data': fields.List(fields.Nested(fields_student_single_db))
 }
+
+
+#################################
+### 1.2 parser initialization ###
+#################################
+
+parser = reqparse.RequestParser()
+parser.add_argument('name', type=str, required=True, help='name required', location=['form', 'args'])
+parser.add_argument('age', type=int, required=True, help='age required', location=['form', 'args'])
+parser.add_argument('exampass', type=bool, required=True, help='exampass required', location=['form', 'args'])
 
 
 
@@ -70,9 +80,13 @@ class ResourceStudentSingle(Resource):
         data = Student.query.get(id)
         if not data:
             abort(404)
-        r_name = request.form.get('name', type=str)
-        r_age = request.form.get('age', type=int)
-        r_exampass = request.form.get('exampass', type=bool)
+        # r_name = request.form.get('name', type=str)
+        # r_age = request.form.get('age', type=int)
+        # r_exampass = request.form.get('exampass', type=bool)
+        args = parser.parse_args()
+        r_name = args.get('name')
+        r_age = args.get('age')
+        r_exampass = args.get('exampass')
         data.name = r_name
         data.age = r_age
         data.exampass = r_exampass

@@ -63,9 +63,9 @@ class Student(MyBaseModel):
     name = db_sqlite.Column(db_sqlite.String(100))
     age = db_sqlite.Column(db_sqlite.Integer)
     exampass = db_sqlite.Column(db_sqlite.Boolean)
-    # enrolltime = db_sqlite.Column(db_sqlite.DateTime)
-    # enrolltime = db_sqlite.Column(db_sqlite.DateTime, default=datetime.datetime.datetime.now())
-    enrolltime = db_sqlite.Column(db_sqlite.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+    # updatetime = db_sqlite.Column(db_sqlite.DateTime)
+    # updatetime = db_sqlite.Column(db_sqlite.DateTime, default=datetime.datetime.datetime.now())
+    updatetime = db_sqlite.Column(db_sqlite.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     def __init__(self, name=None, age=None, exampass=None):
         self.name = name
         self.age = age
