@@ -13,11 +13,13 @@ def hello():
 
 @manager.command
 def createdb():
-    from app.models.sqlite import db_sqlite, Sysinfo, Student
+    from app.models.sqlite import db_sqlite, Sysinfo, Student, User
     db_sqlite.create_all(bind='sqlite1')
     db_sqlite.create_all(bind='sqlite2')
+    db_sqlite.create_all(bind='auth')
     Sysinfo.seed()
     Student.seed()
+    User.seed()
 
 @manager.command
 def deletedb():

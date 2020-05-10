@@ -1,5 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
 import datetime
+from passlib.apps import custom_app_context as pwd_context
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
+from flask import current_app
+
+# reference:
+# https://www.cnblogs.com/bayueman/p/6612027.html
+# https://github.com/miguelgrinberg/REST-auth
 
 db_sqlite = SQLAlchemy(use_native_unicode='utf8')
 
@@ -85,4 +92,47 @@ class Student(MyBaseModel):
         seeds = [s1, s2, s3] 
         db_sqlite.session.add_all(seeds)
         db_sqlite.session.commit()
+
+
+class User(MyBaseModel):
+    __bind_key__ = 'auth'
+    __tablename__ = 'users'
+    username = db_sqlite.Column(db_sqlite.String(100), nullable=False)
+    password = db_sqlite.Column(db_sqlite.String(100), nullable=False)
+    password_hash = db_sqlite.Column(db_sqlite.String(256), nullable=False)
+    desc = db_sqlite.Column(db_sqlite.String(100))
+    def __init__(self, username, password='123456'):
+        self.username = username
+        self.password = password
+        self.password_hash = pwd_context.encrypt(password)
+
+    def hash_password(self, password):
+        self.password = password
+        self.password_hash = pwd_context.encrypt(password)
+    def verify_password(self, password):
+        return pwd_context.verify(password, self.password_hash)
+
+    def generate_auth_token(self, expires=600):
+        s = Serializer(current_app.config.get('SECRET_KEY'), expires_in = expires)
+        return s.dumps({'id': self.id})
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(current_app.config.get('SECRET_KEY'))
+        try:
+            data = s.loads(token)
+        except SignatureExpired:
+            return None # valid token, but expired
+        except BadSignature:
+            return None # invalid token
+        user = User.query.get(data['id'])
+        return user
+
+    @staticmethod
+    def seed():
+        user1 = User('user1', '123456')
+        user1 = User('user2', '123456')
+        seeds = [user1, user2]
+        db_sqlite.session.add_all(seeds)
+        db_sqlite.session.commit()
+        
 
