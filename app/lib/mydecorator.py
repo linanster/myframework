@@ -30,7 +30,8 @@ def threadmaker_legacy(func):
 def viewfunclog(func):
     @wraps(func)
     def inner(*args, **kargs):
-        logger_module1.info('{} {}'.format(request.method, request.url))
+        # logger_module1.info('{} {}'.format(request.method, request.url))
+        logger_module1.info('{} {} - FROM {}'.format(request.method, request.url, request.remote_addr))
         return func(*args, **kargs)
     return inner
 

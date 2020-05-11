@@ -14,9 +14,9 @@ def hello():
 @manager.command
 def createdb():
     from app.models.sqlite import db_sqlite, Sysinfo, Student, User
-    db_sqlite.create_all(bind='sqlite1')
-    db_sqlite.create_all(bind='sqlite2')
-    db_sqlite.create_all(bind='auth')
+    db_sqlite.create_all(bind='sqlite_db1')
+    db_sqlite.create_all(bind='sqlite_db2')
+    db_sqlite.create_all(bind='sqlite_auth')
     Sysinfo.seed()
     Student.seed()
     User.seed()
@@ -24,9 +24,9 @@ def createdb():
 @manager.command
 def deletedb():
     from app.models.sqlite import db_sqlite
-    db_sqlite.drop_all(bind='sqlite1')
-    db_sqlite.drop_all(bind='sqlite2')
-    db_sqlite.drop_all(bind='auth')
+    db_sqlite.drop_all(bind='sqlite_db1')
+    db_sqlite.drop_all(bind='sqlite_db2')
+    db_sqlite.drop_all(bind='sqlite_auth')
 
 @manager.option('--key', dest="key")
 @manager.option('--field', dest="field")

@@ -2,6 +2,7 @@ from flask import request, abort
 from flask_restful import Api, Resource, fields, marshal_with, marshal, reqparse
 
 from app.models.sqlite import Student
+from app.lib.mydecorator import viewfunclog
 
 api_db_student = Api(prefix='/api/db/student/')
 
@@ -47,6 +48,7 @@ parser.add_argument('exampass', type=bool, required=True, help='exampass require
 
 class ResourceStudentSingle(Resource):
 
+    @viewfunclog
     @marshal_with(fields_student_single_response)
     def get(self, id):
         response_status = 200
@@ -59,6 +61,7 @@ class ResourceStudentSingle(Resource):
         }
         return response_obj      
 
+    @viewfunclog
     @marshal_with(fields_student_single_response)
     def delete(self, id):
         data = Student.query.get(id)
@@ -75,6 +78,7 @@ class ResourceStudentSingle(Resource):
         }
         return response_obj 
 
+    @viewfunclog
     @marshal_with(fields_student_single_response)
     def put(self, id):
         data = Student.query.get(id)
@@ -101,6 +105,7 @@ class ResourceStudentSingle(Resource):
         }
         return response_obj         
         
+    @viewfunclog
     @marshal_with(fields_student_single_response)
     def patch(self, id):
         data = Student.query.get(id)
@@ -126,7 +131,7 @@ class ResourceStudentSingle(Resource):
 
   
 class ResourceStudentList(Resource):
-
+    @viewfunclog
     @marshal_with(fields_student_list_response)
     def get(self):
         response_status = 200
@@ -139,6 +144,7 @@ class ResourceStudentList(Resource):
         }
         return response_obj      
 
+    @viewfunclog
     @marshal_with(fields_student_list_response)
     def post(self):
         r_name = request.form.get('name', type=str)

@@ -3,9 +3,9 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 # SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:123456@localhost:3306/ge' 
 SQLALCHEMY_BINDS = {
 # 'mysql': 'mysql+pymysql://root:123456@localhost:3306/ge',
-'sqlite1': 'sqlite:///../sqlite/db1.sqlite3',
-'sqlite2': 'sqlite:///../sqlite/db2.sqlite3',
-'auth': 'sqlite:///../sqlite/auth.sqlite3',
+'sqlite_db1': 'sqlite:///../sqlite/db1.sqlite3',
+'sqlite_db2': 'sqlite:///../sqlite/db2.sqlite3',
+'sqlite_auth': 'sqlite:///../sqlite/auth.sqlite3',
 }
 
 
