@@ -81,7 +81,6 @@ class ResourceLoginTest(Resource):
 api_auth.add_resource(ResourceUserSingle, '/user/<int:id>', endpoint='get_user')
 api_auth.add_resource(ResourceUserList, '/users', '/register', endpoint='get_users')
 api_auth.add_resource(ResourceToken, '/token')
-
 api_auth.add_resource(ResourceLoginTest, '/logintest')
 
 # api verification example by crul

@@ -19,4 +19,5 @@ venv/
 !log/.gitkeep
 !scripts/ignore/.gitkeep
 !sqlite/.gitkeep
+!doc/.gitkeep
 

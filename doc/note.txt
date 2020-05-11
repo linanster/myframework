@@ -1,0 +1,12 @@
+1. view login module
+- views/blue_auth.py
+- lib/loginmanager.py
+- models/sqlite.py/User
+  - verify_password
+
+2. api token/login module
+- apis/api_auth.py
+- app/myauth.py
+- models/sqlite.py/User
+  - verify_password
+  - verify_token

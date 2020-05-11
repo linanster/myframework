@@ -1,12 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
 import datetime
-from passlib.apps import custom_app_context as pwd_context
+# from passlib.apps import custom_app_context as pwd_context
+from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
 from flask import current_app
-
-# reference:
-# https://www.cnblogs.com/bayueman/p/6612027.html
-# https://github.com/miguelgrinberg/REST-auth
+from flask_login import UserMixin
 
 db_sqlite = SQLAlchemy(use_native_unicode='utf8')
 
@@ -67,25 +65,16 @@ class Student(MyBaseModel):
     __bind_key__ = 'sqlite2'
     __tablename__ = 'students'
     # id = db_sqlite.Column(db_sqlite.Integer, nullable=False, autoincrement=True, primary_key=True)
-    name = db_sqlite.Column(db_sqlite.String(100))
+    name = db_sqlite.Column(db_sqlite.String(100), unique=True)
     age = db_sqlite.Column(db_sqlite.Integer)
     exampass = db_sqlite.Column(db_sqlite.Boolean)
-    # updatetime = db_sqlite.Column(db_sqlite.DateTime)
-    # updatetime = db_sqlite.Column(db_sqlite.DateTime, default=datetime.datetime.datetime.now())
     updatetime = db_sqlite.Column(db_sqlite.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     def __init__(self, name=None, age=None, exampass=None):
         self.name = name
         self.age = age
         self.exampass = exampass
-        # self.enrolldate = enrolldate
     @staticmethod
     def seed():
-        # date_obj_1 = datetime.datetime(2020, 5, 8, 19, 40, 0)
-        # date_str_1 = date_obj_1.strftime('%Y-%m-%d %H:%M:%S')
-        # date_str_2 = '2020-05-08 19:40:00'
-        # s1 = Student('allen', 29, False, date_obj_1)
-        # s2 = Student('nan', 32, True, date_str_1)
-        # s3 = Student('jun', 33, False, date_str_2)
         s1 = Student('allen', 29, False)
         s2 = Student('nan', 32, True)
         s3 = Student('jun', 33, False)
@@ -94,23 +83,30 @@ class Student(MyBaseModel):
         db_sqlite.session.commit()
 
 
-class User(MyBaseModel):
+# reference:
+# https://www.cnblogs.com/bayueman/p/6612027.html
+# https://github.com/miguelgrinberg/REST-auth
+
+class User(UserMixin, MyBaseModel):
     __bind_key__ = 'auth'
     __tablename__ = 'users'
-    username = db_sqlite.Column(db_sqlite.String(100), nullable=False)
+    username = db_sqlite.Column(db_sqlite.String(100), nullable=False, unique=True)
     password = db_sqlite.Column(db_sqlite.String(100), nullable=False)
     password_hash = db_sqlite.Column(db_sqlite.String(256), nullable=False)
     desc = db_sqlite.Column(db_sqlite.String(100))
     def __init__(self, username, password='123456'):
         self.username = username
         self.password = password
-        self.password_hash = pwd_context.encrypt(password)
+        # self.password_hash = pwd_context.encrypt(password)
+        self.password_hash = generate_password_hash(password)
 
     def hash_password(self, password):
         self.password = password
-        self.password_hash = pwd_context.encrypt(password)
+        # self.password_hash = pwd_context.encrypt(password)
+        self.password_hash = generate_password_hash(password)
     def verify_password(self, password):
-        return pwd_context.verify(password, self.password_hash)
+        # return pwd_context.verify(password, self.password_hash)
+        return check_password_hash(self.password_hash, password)
 
     def generate_auth_token(self, expires=600):
         s = Serializer(current_app.config.get('SECRET_KEY'), expires_in = expires)
@@ -130,7 +126,7 @@ class User(MyBaseModel):
     @staticmethod
     def seed():
         user1 = User('user1', '123456')
-        user1 = User('user2', '123456')
+        user2 = User('user2', '123456')
         seeds = [user1, user2]
         db_sqlite.session.add_all(seeds)
         db_sqlite.session.commit()
