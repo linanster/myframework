@@ -91,26 +91,28 @@ class User(UserMixin, MyBaseModel):
     __bind_key__ = 'auth'
     __tablename__ = 'users'
     username = db_sqlite.Column(db_sqlite.String(100), nullable=False, unique=True)
-    password = db_sqlite.Column(db_sqlite.String(100), nullable=False)
-    password_hash = db_sqlite.Column(db_sqlite.String(256), nullable=False)
+    _password = db_sqlite.Column(db_sqlite.String(256), nullable=False)
     desc = db_sqlite.Column(db_sqlite.String(100))
-    def __init__(self, username, password='123456'):
+    def __init__(self, username='nousername', password='nopassword'):
         self.username = username
-        self.password = password
-        # self.password_hash = pwd_context.encrypt(password)
-        self.password_hash = generate_password_hash(password)
+        self._password = generate_password_hash(password)
 
-    def hash_password(self, password):
-        self.password = password
-        # self.password_hash = pwd_context.encrypt(password)
-        self.password_hash = generate_password_hash(password)
+    @property
+    def password(self):
+        raise Exception('password is not accessible')
+        # return self._password
+
+    @password.setter
+    def password(self, value):
+        self._password = generate_password_hash(value)
+
     def verify_password(self, password):
-        # return pwd_context.verify(password, self.password_hash)
-        return check_password_hash(self.password_hash, password)
+        return check_password_hash(self._password, password)
 
     def generate_auth_token(self, expires=600):
         s = Serializer(current_app.config.get('SECRET_KEY'), expires_in = expires)
         return s.dumps({'id': self.id})
+
     @staticmethod
     def verify_auth_token(token):
         s = Serializer(current_app.config.get('SECRET_KEY'))

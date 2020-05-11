@@ -9,8 +9,7 @@ api_auth = Api(prefix='/api/auth/')
 
 fields_user_single_db = {
     'username': fields.String,
-    'password': fields.String,
-    'password_hash': fields.String,
+    'desc': fields.String,
 }
 
 fields_user_single_response = {
@@ -55,8 +54,11 @@ class ResourceUserList(Resource):
             abort(400)
         if User.query.filter_by(username = username).first() is not None:
             abort(400)
-        user = User(username = username)
-        user.hash_password(password)
+        # user = User(username = username)
+        # user.hash_password(password)
+        user = User()
+        user.username = username
+        user.password = password
         if not user.save():
             abort(400)
         # return jsonify({ 'username': user.username }), 201, {'Location': url_for('get_user', id = user.id, _external = True)}        
@@ -71,12 +73,16 @@ class ResourceToken(Resource):
     @http_basic_auth.login_required
     def get(self):
         token = g.user.generate_auth_token()
-        return {'token': token.decode('ascii')}
+        return {
+            'username':g.user.username,
+            'token': token.decode('ascii'),
+            'duration': 600
+        }
     
 class ResourceLoginTest(Resource):
     @http_basic_auth.login_required
     def get(self):
-        return "login as {}:{} test success".format(g.user.username, g.user.password)
+        return "{} login success".format(g.user.username)
 
 api_auth.add_resource(ResourceUserSingle, '/user/<int:id>', endpoint='get_user')
 api_auth.add_resource(ResourceUserList, '/users', '/register', endpoint='get_users')

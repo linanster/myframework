@@ -26,6 +26,7 @@ def deletedb():
     from app.models.sqlite import db_sqlite
     db_sqlite.drop_all(bind='sqlite1')
     db_sqlite.drop_all(bind='sqlite2')
+    db_sqlite.drop_all(bind='auth')
 
 @manager.option('--key', dest="key")
 @manager.option('--field', dest="field")
