@@ -32,8 +32,17 @@ def my_login_required(func):
             # 2. try to authenticate with username/password
             user = User.query.filter_by(username = username).first()
             if not user or not user.verify_password(password):
-                abort(401, msg='authenticate failed')
+                abort(401, msg='authentication failed')
         g.user = user
         return func(*args, **kwargs)
     return inner
         
+
+def my_permission_required(permission):
+    def inner1(func):
+        def inner2(*args, **kwargs):
+            if not g.user.check_permission(permission):
+                abort(403, msg='authorization failed')
+            return func(*args, **kwargs)
+        return inner2
+    return inner1

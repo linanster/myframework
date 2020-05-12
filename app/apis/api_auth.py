@@ -2,7 +2,7 @@ from flask import request, abort, jsonify, url_for, g
 from flask_restful import Api, Resource, fields, marshal_with, marshal, reqparse
 
 from app.models.sqlite import User
-from app.lib.myauth import http_basic_auth, my_login_required
+from app.lib.myauth import http_basic_auth, my_login_required, my_permission_required
 from app.lib.mydecorator import viewfunclog
 
 api_auth = Api(prefix='/api/auth/')
@@ -77,7 +77,6 @@ class ResourceToken(Resource):
     # @http_basic_auth.login_required
     @my_login_required
     @viewfunclog
-    # def get(self):
     def post(self):
         token = g.user.generate_auth_token()
         return {
@@ -90,14 +89,25 @@ class ResourceLoginTest(Resource):
     # @http_basic_auth.login_required
     @my_login_required
     @viewfunclog
-    # def get(self):
     def post(self):
-        return "{} login success".format(g.user.username)
+        return "user {} login success".format(g.user.username)
+
+USER_LEVEL_1 = 1
+USER_LEVEL_2 = 2
+USER_LEVEL_3 = 4
+
+class ResourcePermissionTest(Resource):
+    @my_login_required
+    @my_permission_required(USER_LEVEL_2)
+    @viewfunclog
+    def post(self):
+        return "user {} permission sufficient".format(g.user.username)
 
 api_auth.add_resource(ResourceUserSingle, '/user/<int:id>', endpoint='get_user')
 api_auth.add_resource(ResourceUserList, '/users', '/register', endpoint='get_users')
 api_auth.add_resource(ResourceToken, '/token')
 api_auth.add_resource(ResourceLoginTest, '/logintest')
+api_auth.add_resource(ResourcePermissionTest, '/permissiontest')
 
 # api verification example by crul
 # 1. get token

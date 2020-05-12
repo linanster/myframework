@@ -93,10 +93,12 @@ class User(UserMixin, MyBaseModel):
     __tablename__ = 'users'
     username = db_sqlite.Column(db_sqlite.String(100), nullable=False, unique=True, index=True)
     _password = db_sqlite.Column(db_sqlite.String(256), nullable=False)
+    _permission = db_sqlite.Column(db_sqlite.Integer, nullable=False)
     desc = db_sqlite.Column(db_sqlite.String(100))
-    def __init__(self, username='nousername', password='nopassword'):
+    def __init__(self, username='nousername', password='nopassword', permission = 1):
         self.username = username
         self._password = generate_password_hash(password)
+        self._permission = permission
 
     @property
     def password(self):
@@ -114,6 +116,9 @@ class User(UserMixin, MyBaseModel):
         s = Serializer(current_app.config.get('SECRET_KEY'), expires_in = expires)
         return s.dumps({'id': self.id})
 
+    def check_permission(self, permission):
+        return permission & self._permission == permission
+
     @staticmethod
     def verify_auth_token(token):
         if token is None:
@@ -130,9 +135,10 @@ class User(UserMixin, MyBaseModel):
 
     @staticmethod
     def seed():
-        user1 = User('user1', '123456')
-        user2 = User('user2', '123456')
-        seeds = [user1, user2]
+        user1 = User('user1', '123456', 1)
+        user2 = User('user2', '123456', 3)
+        user3 = User('user3', '123456', 7)
+        seeds = [user1, user2, user3]
         db_sqlite.session.add_all(seeds)
         db_sqlite.session.commit()
         
