@@ -3,6 +3,7 @@ from app.models import init_models
 from app.views import init_views
 from app.apis import init_apis
 from app.ext import init_ext
+from app.mymiddleware import load_middleware
 
 def create_app():
     app = Flask(__name__)
@@ -11,4 +12,5 @@ def create_app():
     init_views(app)
     init_apis(app)
     init_ext(app)
+    load_middleware(app)
     return app

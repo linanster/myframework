@@ -55,7 +55,8 @@ class Sysinfo(MyBaseModel):
     @staticmethod
     def seed():
         r_running = Sysinfo('r_running', field1=False, description='Indicate running or not, default is False.')
-        seeds = [r_running,] 
+        r_visitcount = Sysinfo('r_visitcount', field2=0, description='Total history visit count.')
+        seeds = [r_running, r_visitcount]
         db_sqlite.session.add_all(seeds)
         db_sqlite.session.commit()
 

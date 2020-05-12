@@ -13,6 +13,11 @@ def get_now_timestamp():
     import time
     return time.time()
 
+@application_framework.template_global('visitcount')
+def get_visitcount():
+    from app.lib.modelutils import get_visitcount
+    return get_visitcount()
+
 @application_framework.template_filter('timeformat')
 def timeformat(timestamp):
     import time
