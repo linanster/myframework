@@ -90,7 +90,7 @@ class Student(MyBaseModel):
 class User(UserMixin, MyBaseModel):
     __bind_key__ = 'sqlite_auth'
     __tablename__ = 'users'
-    username = db_sqlite.Column(db_sqlite.String(100), nullable=False, unique=True)
+    username = db_sqlite.Column(db_sqlite.String(100), nullable=False, unique=True, index=True)
     _password = db_sqlite.Column(db_sqlite.String(256), nullable=False)
     desc = db_sqlite.Column(db_sqlite.String(100))
     def __init__(self, username='nousername', password='nopassword'):
