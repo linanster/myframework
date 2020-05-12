@@ -2,7 +2,7 @@ from flask import request, abort, jsonify, url_for, g
 from flask_restful import Api, Resource, fields, marshal_with, marshal, reqparse
 
 from app.models.sqlite import User
-from app.myauth import http_basic_auth
+from app.lib.myauth import http_basic_auth, my_login_required
 from app.lib.mydecorator import viewfunclog
 
 api_auth = Api(prefix='/api/auth/')
@@ -74,9 +74,11 @@ class ResourceUserList(Resource):
         return response_obj, 201, {'Location': url_for('get_user', id = user.id, _external = True)}        
 
 class ResourceToken(Resource):
-    @http_basic_auth.login_required
+    # @http_basic_auth.login_required
+    @my_login_required
     @viewfunclog
-    def get(self):
+    # def get(self):
+    def post(self):
         token = g.user.generate_auth_token()
         return {
             'username':g.user.username,
@@ -85,9 +87,11 @@ class ResourceToken(Resource):
         }
     
 class ResourceLoginTest(Resource):
-    @http_basic_auth.login_required
+    # @http_basic_auth.login_required
+    @my_login_required
     @viewfunclog
-    def get(self):
+    # def get(self):
+    def post(self):
         return "{} login success".format(g.user.username)
 
 api_auth.add_resource(ResourceUserSingle, '/user/<int:id>', endpoint='get_user')

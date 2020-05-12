@@ -6,7 +6,7 @@
 
 2. api token/login module
 - apis/api_auth.py
-- app/myauth.py
+- app/lib/myauth.py
 - models/sqlite.py/User
   - verify_password
   - verify_token

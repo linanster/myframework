@@ -116,6 +116,8 @@ class User(UserMixin, MyBaseModel):
 
     @staticmethod
     def verify_auth_token(token):
+        if token is None:
+            return None
         s = Serializer(current_app.config.get('SECRET_KEY'))
         try:
             data = s.loads(token)
