@@ -1,15 +1,16 @@
-from app.models.sqlite import db_sqlite, Sysinfo
+from app.models.sqlite import db_sqlite, Sysinfo, Student, User, StatsCount
 
 def get_running():
     record = Sysinfo.query.filter_by(key='r_running').first()
     return record.field1
 
 def get_visitcount():
-    record = Sysinfo.query.filter_by(key='r_visitcount').first()
-    return record.field2
+    record = StatsCount.query.filter_by(metric='visitcount').first()
+    return record.count
 
 def add_visitcount():
-    record = Sysinfo.query.filter_by(key='r_visitcount').first()
-    record.field2 += 1
+    record = StatsCount.query.filter_by(metric='visitcount').first()
+    record.count += 1
     db_sqlite.session.commit()
-    return record.field2
+    return record.count
+

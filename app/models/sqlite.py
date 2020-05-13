@@ -36,7 +36,7 @@ class MyBaseModel(db_sqlite.Model):
 
 # class Sysinfo(db_sqlite.Model):
 class Sysinfo(MyBaseModel):
-    __bind_key__ = 'sqlite_db1'
+    __bind_key__ = 'sqlite_db1_sys'
     __tablename__ = 'sysinfos'
     # id = db_sqlite.Column(db_sqlite.Integer, nullable=False, autoincrement=True, primary_key=True)
     key = db_sqlite.Column(db_sqlite.String(100))
@@ -55,15 +55,14 @@ class Sysinfo(MyBaseModel):
     @staticmethod
     def seed():
         r_running = Sysinfo('r_running', field1=False, description='Indicate running or not, default is False.')
-        r_visitcount = Sysinfo('r_visitcount', field2=0, description='Total history visit count.')
-        seeds = [r_running, r_visitcount]
+        seeds = [r_running,]
         db_sqlite.session.add_all(seeds)
         db_sqlite.session.commit()
 
 
 # class Student(db_sqlite.Model):
 class Student(MyBaseModel):
-    __bind_key__ = 'sqlite_db2'
+    __bind_key__ = 'sqlite_db2_app'
     __tablename__ = 'students'
     # id = db_sqlite.Column(db_sqlite.Integer, nullable=False, autoincrement=True, primary_key=True)
     name = db_sqlite.Column(db_sqlite.String(100), unique=True)
@@ -89,7 +88,7 @@ class Student(MyBaseModel):
 # https://github.com/miguelgrinberg/REST-auth
 
 class User(UserMixin, MyBaseModel):
-    __bind_key__ = 'sqlite_auth'
+    __bind_key__ = 'sqlite_db3_auth'
     __tablename__ = 'users'
     username = db_sqlite.Column(db_sqlite.String(100), nullable=False, unique=True, index=True)
     _password = db_sqlite.Column(db_sqlite.String(256), nullable=False)
@@ -142,4 +141,21 @@ class User(UserMixin, MyBaseModel):
         db_sqlite.session.add_all(seeds)
         db_sqlite.session.commit()
         
+
+class StatsCount(MyBaseModel):
+    __bind_key__ = 'sqlite_db4_hist'
+    __tablename__ = 'statscounts'
+    metric = db_sqlite.Column(db_sqlite.String(100))
+    count = db_sqlite.Column(db_sqlite.Integer)
+    # description = db_sqlite.Column(db_sqlite.String(100))
+    def __init__(self, metric='metric1', count=0):
+        self.metric = metric
+        self.count = count
+        # self.description = description
+    @staticmethod
+    def seed():
+        s_visitcount = StatsCount('visitcount', 0)
+        seeds = [s_visitcount, ]
+        db_sqlite.session.add_all(seeds)
+        db_sqlite.session.commit()
 
