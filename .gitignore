@@ -12,7 +12,7 @@ log/*
 scripts/ignore/*
 sqlite/*
 venv/
-migrations/
+# migrations/
 
 # 3.ignore specified file
 
