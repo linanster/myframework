@@ -13,6 +13,7 @@ scripts/ignore/*
 sqlite/*
 venv/
 # migrations/
+cache/*
 
 # 3.ignore specified file
 
@@ -21,4 +22,5 @@ venv/
 !scripts/ignore/.gitkeep
 !sqlite/.gitkeep
 !doc/.gitkeep
+!cache/.gitkeep
 
