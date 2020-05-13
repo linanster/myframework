@@ -13,11 +13,6 @@ migrate = Migrate(app, db_sqlite)
 
 manager = Manager(app)
 
-# python3 manage.py db init --multidb
-# python3 manage.py db migrate [--message MESSAGE]
-# python3 manage.py db upgrade [--tag TAG]
-# python3 manage.py db downgrade [--tag TAG]
-# python3 manage.py db history
 manager.add_command('db', MigrateCommand)
 
 @manager.command
@@ -66,7 +61,13 @@ def deletedb(table=False, data=False, hist=False):
     if hist:
         print('==delete history tables==')
         db_sqlite.drop_all(bind='sqlite_db4_hist')
-        
+
+@manager.command
+def init_hist():
+    "my cmd: run StatsCount.seed()"
+    from app.models.sqlite import db_sqlite, StatsCount
+    print('==insert initial history data==')
+    StatsCount.seed()
 
 @manager.option('-k', '--key', dest="key", default='r_running')
 @manager.option('-f', '--field', dest="field", default='field1')

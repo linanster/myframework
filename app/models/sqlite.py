@@ -143,15 +143,15 @@ class User(UserMixin, MyBaseModel):
         
 
 class StatsCount(MyBaseModel):
-    __bind_key__ = 'sqlite_db4_hist'
+    # __bind_key__ = 'sqlite_db4_hist'
     __tablename__ = 'statscounts'
     metric = db_sqlite.Column(db_sqlite.String(100))
     count = db_sqlite.Column(db_sqlite.Integer)
-    # description = db_sqlite.Column(db_sqlite.String(100))
-    def __init__(self, metric='metric1', count=0):
+    description = db_sqlite.Column(db_sqlite.String(100))
+    def __init__(self, metric='metric1', count=0, description=''):
         self.metric = metric
         self.count = count
-        # self.description = description
+        self.description = description
     @staticmethod
     def seed():
         s_visitcount = StatsCount('visitcount', 0)
