@@ -26,26 +26,35 @@ def hello():
     print('Hello, Manager Command!')
 
 @manager.command
-# python3 manager createdb
-# python3 manager createdb --init
+# python3 manage.py createdb
+# python3 manage.py createdb --init
 def createdb(init=False):
     "my cmd: create all database and initialize data"
     from app.models.sqlite import db_sqlite, Sysinfo, Student, User
-    db_sqlite.create_all(bind='sqlite_db1')
-    db_sqlite.create_all(bind='sqlite_db2')
-    db_sqlite.create_all(bind='sqlite_auth')
     if init:
         Sysinfo.seed()
         Student.seed()
         User.seed()
+    else:
+        db_sqlite.create_all(bind='sqlite_db1')
+        db_sqlite.create_all(bind='sqlite_db2')
+        db_sqlite.create_all(bind='sqlite_auth')
 
 @manager.command
-def deletedb():
-    "my cmd: delete all database tables"
-    from app.models.sqlite import db_sqlite
-    db_sqlite.drop_all(bind='sqlite_db1')
-    db_sqlite.drop_all(bind='sqlite_db2')
-    db_sqlite.drop_all(bind='sqlite_auth')
+# python3 manage.py deletedb --uninit
+# python3 manage.py deletedb
+def deletedb(uninit=False):
+    "my cmd: delete all database tables and datas"
+    from app.models.sqlite import db_sqlite, Sysinfo, Student, User
+    if uninit:
+        Sysinfo.query.delete()
+        Student.query.delete()
+        User.query.delete()
+        db_sqlite.session.commit()
+    else:
+        db_sqlite.drop_all(bind='sqlite_db1')
+        db_sqlite.drop_all(bind='sqlite_db2')
+        db_sqlite.drop_all(bind='sqlite_auth')
 
 @manager.option('-k', '--key', dest="key", default='r_running')
 @manager.option('-f', '--field', dest="field", default='field1')
