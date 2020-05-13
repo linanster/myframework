@@ -1,12 +1,15 @@
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 import time
+import uuid
 # from passlib.apps import custom_app_context as pwd_context
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
 from flask import current_app
 from flask_login import UserMixin
 from flask_jwt import jwt
+
+from app.ext.cache import cache
 
 db_sqlite = SQLAlchemy(use_native_unicode='utf8')
 
@@ -113,12 +116,12 @@ class User(UserMixin, MyBaseModel):
     def verify_password(self, password):
         return check_password_hash(self._password, password)
 
-    def generate_auth_token_legacy(self, expires=600):
+    def generate_auth_token_legacy1(self, expires=600):
         s = Serializer(current_app.config.get('SECRET_KEY'), expires_in = expires)
         return s.dumps({'id': self.id})
 
     @staticmethod
-    def verify_auth_token_legacy(token):
+    def verify_auth_token_legacy1(token):
         if token is None:
             return None
         s = Serializer(current_app.config.get('SECRET_KEY'))
@@ -131,13 +134,13 @@ class User(UserMixin, MyBaseModel):
         user = User.query.get(data['id'])
         return user
 
-    def generate_auth_token(self, expires_in=600):
+    def generate_auth_token_legacy2(self, expires_in=600):
         return jwt.encode(
             {'id': self.id, 'exp': time.time() + expires_in},
             current_app.config['SECRET_KEY'], algorithm='HS256')
 
     @staticmethod
-    def verify_auth_token(token):
+    def verify_auth_token_legacy2(token):
         try:
             data = jwt.decode(token, current_app.config['SECRET_KEY'], True, 
                               algorithms=['HS256'])
@@ -145,6 +148,20 @@ class User(UserMixin, MyBaseModel):
             return None
         return User.query.get(data['id'])    
 
+    def generate_auth_token(self, expire=600): 
+        token = uuid.uuid4().hex
+        cache.set(token, self.id, timeout=expire)
+        return token
+
+    @staticmethod
+    def verify_auth_token(token):
+        try:
+            userid = cache.get(token)
+        except:
+            return None
+        return User.query.get(userid)
+
+    # permission check module
     def check_permission(self, permission):
         return permission & self._permission == permission
 

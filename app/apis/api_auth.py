@@ -81,7 +81,8 @@ class ResourceToken(Resource):
         token = g.user.generate_auth_token()
         return {
             'username':g.user.username,
-            'token': token.decode('ascii'),
+            # 'token': token.decode('ascii'),
+            'token': token if type(token) is str else token.decode('ascii'),
             'duration': 600
         }
     
