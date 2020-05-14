@@ -5,8 +5,12 @@
     <title>Title</title>
 </head>
 <body>
-<p>Current Time: {{ now()|timeformat }} </p>
-<p>Running State: {{ status }}</p>
-<p>Total visit count: {{ visitcount() }}</p>
+    {% if current_user.is_authenticated %}
+        Welcome, {{ current_user.username }} |
+        <a href="{{ url_for('blue_auth.logout') }}">logout</a> |
+    {% endif %}
+    <p>Current Time: {{ now()|timeformat }} </p>
+    <p>Running State: {{ status }}</p>
+    <p>Total visit count: {{ visitcount() }}</p>
 </body>
 </html>
