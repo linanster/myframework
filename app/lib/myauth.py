@@ -32,17 +32,18 @@ def my_login_required(func):
             # 2. try to authenticate with username/password
             user = User.query.filter_by(username = username).first()
             if not user or not user.verify_password(password):
-                abort(401, msg='authentication failed')
+                abort(401, status='401', msg='authentication failed')
         g.user = user
         return func(*args, **kwargs)
     return inner
         
-
+# 1. this is decorator
+# 2. it should be called right after @my_login_required
 def my_permission_required(permission):
     def inner1(func):
         def inner2(*args, **kwargs):
             if not g.user.check_permission(permission):
-                abort(403, msg='authorization failed')
+                abort(403, status=403, username=g.user.username, msg='authorization failed')
             return func(*args, **kwargs)
         return inner2
     return inner1

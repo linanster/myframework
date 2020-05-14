@@ -91,7 +91,11 @@ class ResourceLoginTest(Resource):
     @my_login_required
     @viewfunclog
     def post(self):
-        return "user {} login success".format(g.user.username)
+        return {
+            'status': 201,
+            'username': g.user.username,
+            'msg': "login success",
+        }
 
 USER_LEVEL_1 = 1
 USER_LEVEL_2 = 2
@@ -102,7 +106,11 @@ class ResourcePermissionTest(Resource):
     @my_permission_required(USER_LEVEL_2)
     @viewfunclog
     def post(self):
-        return "user {} permission sufficient".format(g.user.username)
+        return {
+            'status': 201,
+            'username': g.user.username,
+            'msg': "permission sufficient",
+        }
 
 api_auth.add_resource(ResourceUserSingle, '/user/<int:id>', endpoint='get_user')
 api_auth.add_resource(ResourceUserList, '/users', '/register', endpoint='get_users')
