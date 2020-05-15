@@ -1,0 +1,33 @@
+{% block doc %}
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+{% block head %}
+    <meta charset="UTF-8">
+    <title>{% block title%}MyFramework{% endblock title %}</title>
+    {% block styles %}
+
+    {% endblock styles %}
+    {% block scripts %}
+        
+    {% endblock scripts %}
+{% endblock head %}
+</head>
+
+<body>
+{% block body %}
+    {% if current_user.is_authenticated %}
+        Welcome, {{ current_user.username }} |
+        <a href="{{ url_for('blue_auth.logout') }}">logout</a> |
+    {% endif %}
+    <br>
+    <br>
+{% endblock body %}
+</body>
+
+
+</html>
+{% endblock %}
+

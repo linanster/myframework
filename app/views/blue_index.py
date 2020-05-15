@@ -15,4 +15,4 @@ blue_index = Blueprint('blue_index', __name__)
 @login_required
 @viewfunclog
 def vf_index():
-    return redirect(url_for('blue_test.vf_index'))
+    return redirect(url_for('blue_test.vf_test1'))

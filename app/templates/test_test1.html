@@ -1,0 +1,8 @@
+{% extends '_mybase.html' %}
+
+{% block body %}
+    {{ super() }}
+    <p>Current Time: {{ now()|timeformat }} </p>
+    <p>Running State: {{ status }}</p>
+    <p>Total visit count: {{ visitcount() }}</p>
+{% endblock body %}

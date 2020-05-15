@@ -1,7 +1,11 @@
 {% extends '_mybase.html' %}
 
+{% block title %}
+    MyFramework Test1
+{% endblock title %}
+
 {% block body %}
     {{ super() }}
-    <a href="{{ url_for('blue_admin.vf_config') }}">view flask config</a>
+    Test2 success
 {% endblock body %}
 

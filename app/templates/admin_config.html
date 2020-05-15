@@ -1,8 +1,12 @@
-<a href="{{ url_for('blue_admin.vf_index') }}">return</a>
-<br>
-<ul>
-    {% for item in config %}
-        <li>{{item}}={{config[item]}}
-    {% endfor %}
-</ul>
+{% extends '_mybase.html' %}
 
+{% block body %}
+    {{ super() }}
+    <a href="{{ url_for('blue_admin.vf_index') }}">return</a>
+    <br>
+    <ul>
+        {% for item in config %}
+            <li>{{ item }}={{ config[item] }}
+        {% endfor %}
+    </ul>
+{% endblock body %}

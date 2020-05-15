@@ -1,10 +1,13 @@
-<h1>Login</h1>
-<form action="{{ url_for('blue_auth.login') }}" method="post">
-    <input type="text" name="username" placeholder="username">
-    <input type="password" name="password" placeholder="password">
-    <input type="submit">
-	<br>
-</form>
-<p class="text-warning">{{ warning }}</p>
+{% extends '_mybase.html' %}
 
+{% block body %}
+    <h1>Login</h1>
+    <form action="{{ url_for('blue_auth.login') }}" method="post">
+        <input type="text" name="username" placeholder="username">
+        <input type="password" name="password" placeholder="password">
+        <input type="submit">
+        <br>
+    </form>
+    <p class="text-warning">{{ warning }}</p>
 
+{% endblock body %}
