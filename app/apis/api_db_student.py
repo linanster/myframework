@@ -12,6 +12,7 @@ api_db_student = Api(prefix='/api/db/student/')
 #####################################################################
 
 fields_student_single_db = {
+    'id': fields.Integer,
     'name': fields.String,
     'age': fields.Integer,
     'exampass': fields.Boolean,
@@ -46,10 +47,11 @@ parser.add_argument('exampass', type=bool, required=True, help='exampass require
 ### 2. resource class definition ###
 ####################################
 
-class ResourceStudentSingle(Resource):
+class ResourceStudent(Resource):
 
     @viewfunclog
     @marshal_with(fields_student_single_response)
+    # 1.查看单条记录
     def get(self, id):
         response_obj = {
             'status': 200,
@@ -60,6 +62,7 @@ class ResourceStudentSingle(Resource):
 
     @viewfunclog
     @marshal_with(fields_student_single_response)
+    # 2.删除单条记录
     def delete(self, id):
         data = Student.query.get(id)
         if not data:
@@ -75,6 +78,7 @@ class ResourceStudentSingle(Resource):
 
     @viewfunclog
     @marshal_with(fields_student_single_response)
+    # 3.1 修改记录
     def put(self, id):
         data = Student.query.get(id)
         if not data:
@@ -100,6 +104,7 @@ class ResourceStudentSingle(Resource):
         
     @viewfunclog
     @marshal_with(fields_student_single_response)
+    # 3.2 修改记录
     def patch(self, id):
         data = Student.query.get(id)
         if not data:
@@ -121,9 +126,10 @@ class ResourceStudentSingle(Resource):
 
 
   
-class ResourceStudentList(Resource):
+class ResourceStudents(Resource):
     @viewfunclog
     @marshal_with(fields_student_list_response)
+    # 4. 查看所有记录
     def get(self):
         data = Student.query.all()
         response_obj = {
@@ -135,6 +141,7 @@ class ResourceStudentList(Resource):
 
     @viewfunclog
     @marshal_with(fields_student_list_response)
+    # 5. 增加新记录
     def post(self):
         r_name = request.form.get('name', type=str)
         r_age = request.form.get('age', type=int)
@@ -158,8 +165,8 @@ class ResourceStudentList(Resource):
 ### 3. Resourceful Routing ###
 ##############################
 
-api_db_student.add_resource(ResourceStudentSingle, '/<int:id>')
-api_db_student.add_resource(ResourceStudentList, '/all', '/add')
+api_db_student.add_resource(ResourceStudent, '/student/<int:id>')
+api_db_student.add_resource(ResourceStudents, '/students')
 
 
 
