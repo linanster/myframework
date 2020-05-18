@@ -8,36 +8,37 @@ from app.lib.mydecorator import viewfunclog
 api_auth = Api(prefix='/api/auth/')
 
 
-fields_user_single_db = {
+fields_user_db = {
+    'id': fields.Integer,
     'username': fields.String,
     'desc': fields.String,
 }
 
-fields_user_single_response = {
+fields_user_response = {
     'status': fields.Integer,
     'msg': fields.String,
-    'data': fields.Nested(fields_user_single_db)
+    'data': fields.Nested(fields_user_db)
 }
 
-fields_user_list_response = {
+fields_users_response = {
     'status': fields.Integer,
     'msg': fields.String,
-    'data': fields.List(fields.Nested(fields_user_single_db))
+    'data': fields.List(fields.Nested(fields_user_db))
 }
 
 
 
-class ResourceUserSingle(Resource):
+class ResourceUser(Resource):
     @viewfunclog
-    @marshal_with(fields_user_single_db)
+    @marshal_with(fields_user_db)
     def get(self, id):
         return User.query.get(id)
 
 
 
-class ResourceUserList(Resource):
+class ResourceUsers(Resource):
     @viewfunclog
-    @marshal_with(fields_user_list_response)
+    @marshal_with(fields_users_response)
     def get(self):
         users = User.query.all()
         response_obj = {
@@ -48,7 +49,7 @@ class ResourceUserList(Resource):
         return response_obj
 
     @viewfunclog
-    @marshal_with(fields_user_single_response)
+    @marshal_with(fields_user_response)
     def post(self):
         # username = request.json.get('username')
         # password = request.json.get('password')
@@ -73,8 +74,7 @@ class ResourceUserList(Resource):
         }
         return response_obj, 201, {'Location': url_for('get_user', id = user.id, _external = True)}        
 
-# class ResourceToken(Resource):
-class ResourceLogin(Resource):
+class ResourceToken(Resource):
     # @http_basic_auth.login_required
     @my_login_required
     @viewfunclog
@@ -93,9 +93,9 @@ class ResourceLoginTest(Resource):
     # @http_basic_auth.login_required
     @my_login_required
     @viewfunclog
-    def post(self):
+    def get(self):
         return {
-            'status': 201,
+            'status': 200,
             'username': g.user.username,
             'msg': "login success",
         }
@@ -115,9 +115,9 @@ class ResourcePermissionTest(Resource):
             'msg': "permission sufficient",
         }
 
-api_auth.add_resource(ResourceUserSingle, '/user/<int:id>', endpoint='get_user')
-api_auth.add_resource(ResourceUserList, '/users', '/register', endpoint='get_users')
-api_auth.add_resource(ResourceLogin, '/login')
+api_auth.add_resource(ResourceUser, '/user/<int:id>', endpoint='get_user')
+api_auth.add_resource(ResourceUsers, '/users', '/register', endpoint='get_users')
+api_auth.add_resource(ResourceToken, '/token')
 api_auth.add_resource(ResourceLoginTest, '/logintest')
 api_auth.add_resource(ResourcePermissionTest, '/permissiontest')
 

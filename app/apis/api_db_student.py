@@ -11,7 +11,7 @@ api_db_student = Api(prefix='/api/db/student/')
 ### 1.1 fields definition, for marshal (custom object serializing) ###
 #####################################################################
 
-fields_student_single_db = {
+fields_student_db = {
     'id': fields.Integer,
     'name': fields.String,
     'age': fields.Integer,
@@ -19,16 +19,16 @@ fields_student_single_db = {
     'updatetime': fields.DateTime(dt_format='iso8601')
 }
 
-fields_student_single_response = {
+fields_student_response = {
     'status': fields.Integer,
     'msg': fields.String,
-    'data': fields.Nested(fields_student_single_db)
+    'data': fields.Nested(fields_student_db)
 }
 
-fields_student_list_response = {
+fields_students_response = {
     'status': fields.Integer,
     'msg': fields.String,
-    'data': fields.List(fields.Nested(fields_student_single_db))
+    'data': fields.List(fields.Nested(fields_student_db))
 }
 
 
@@ -50,7 +50,7 @@ parser.add_argument('exampass', type=bool, required=True, help='exampass require
 class ResourceStudent(Resource):
 
     @viewfunclog
-    @marshal_with(fields_student_single_response)
+    @marshal_with(fields_student_response)
     # 1.查看单条记录
     def get(self, id):
         response_obj = {
@@ -61,7 +61,7 @@ class ResourceStudent(Resource):
         return response_obj      
 
     @viewfunclog
-    @marshal_with(fields_student_single_response)
+    @marshal_with(fields_student_response)
     # 2.删除单条记录
     def delete(self, id):
         data = Student.query.get(id)
@@ -77,7 +77,7 @@ class ResourceStudent(Resource):
         return response_obj 
 
     @viewfunclog
-    @marshal_with(fields_student_single_response)
+    @marshal_with(fields_student_response)
     # 3.1 修改记录
     def put(self, id):
         data = Student.query.get(id)
@@ -103,7 +103,7 @@ class ResourceStudent(Resource):
         return response_obj         
         
     @viewfunclog
-    @marshal_with(fields_student_single_response)
+    @marshal_with(fields_student_response)
     # 3.2 修改记录
     def patch(self, id):
         data = Student.query.get(id)
@@ -128,7 +128,7 @@ class ResourceStudent(Resource):
   
 class ResourceStudents(Resource):
     @viewfunclog
-    @marshal_with(fields_student_list_response)
+    @marshal_with(fields_students_response)
     # 4. 查看所有记录
     def get(self):
         data = Student.query.all()
@@ -140,7 +140,7 @@ class ResourceStudents(Resource):
         return response_obj      
 
     @viewfunclog
-    @marshal_with(fields_student_list_response)
+    @marshal_with(fields_students_response)
     # 5. 增加新记录
     def post(self):
         r_name = request.form.get('name', type=str)

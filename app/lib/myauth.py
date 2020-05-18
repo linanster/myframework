@@ -21,10 +21,11 @@ def verify_password(username_or_token, password):
 
 # this is decorator
 def my_login_required(func):
+    # def inner(*args, **kwargs):
     def inner(*args, **kwargs):
-        token = request.form.get('token')
-        username = request.form.get('username')
-        password = request.form.get('password')
+        username = request.form.get('username') or request.args.get('username')
+        password = request.form.get('password') or request.args.get('password')
+        token = request.form.get('token') or request.args.get('token')
 
         # 1. first try to authenticate by token
         user = User.verify_auth_token(token)
