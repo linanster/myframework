@@ -1,0 +1,11 @@
+{% extends '_mybase.html' %}
+
+{% block body %}
+    {{ super() }}
+    <h1>MyFramework Home</h1>
+    <h2>Views</h2>
+    <a href="{{ url_for('blue_admin.vf_index') }}">1. admin</a> <br>
+    <a href="{{ url_for('blue_test.vf_index') }}">2. test</a>
+    <h2>APIs</h2>
+{% endblock body %}
+

@@ -1,0 +1,9 @@
+{% extends '_mybase.html' %}
+
+{% block body %}
+    {{ super() }}
+    <h1>MyFramework Test</h1>
+    <a href="{{ url_for('blue_test.vf_test1') }}">1. test1</a> <br>
+    <a href="{{ url_for('blue_test.vf_test2') }}">2. test2</a> <br>
+{% endblock body %}
+

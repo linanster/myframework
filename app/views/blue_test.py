@@ -9,6 +9,10 @@ blue_test = Blueprint('blue_test', __name__, url_prefix='/test')
 
 @blue_test.route('/')
 @blue_test.route('/index')
+def vf_index():
+    return render_template('test_index.html')
+
+
 @blue_test.route('/test1')
 @viewfunclog
 def vf_test1():

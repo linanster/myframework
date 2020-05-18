@@ -51,13 +51,10 @@ class ResourceStudentSingle(Resource):
     @viewfunclog
     @marshal_with(fields_student_single_response)
     def get(self, id):
-        response_status = 200
-        response_msg = 'student with id {}'.format(id)
-        response_data = Student.query.get(id)
         response_obj = {
-            'status': response_status,
-            'msg': response_msg,
-            'data': response_data
+            'status': 200,
+            'msg': 'student with id {}'.format(id),
+            'data': Student.query.get(id),
         }
         return response_obj      
 
@@ -69,12 +66,10 @@ class ResourceStudentSingle(Resource):
             abort(404)
         if not data.delete():
             abort(400)
-        response_status = 200
-        response_msg = 'delete student with id {} success'.format(id)
         response_obj = {
-            'status': response_status,
-            'msg': response_msg,
-            'data': data
+            'status': 200,
+            'msg': 'delete student with id {} success'.format(id),
+            'data': data,
         }
         return response_obj 
 
@@ -96,12 +91,10 @@ class ResourceStudentSingle(Resource):
         data.exampass = r_exampass
         if not data.save():
             abort(400)
-        response_status = 200
-        response_msg = 'put student with id {} success'.format(id)
         response_obj = {
-            'status': response_status,
-            'msg': response_msg,
-            'data': data
+            'status': 200,
+            'msg': 'put student with id {} success'.format(id),
+            'data': data,
         }
         return response_obj         
         
@@ -119,12 +112,10 @@ class ResourceStudentSingle(Resource):
         data.exampass = r_exampass or data.exampass
         if not data.save():
             abort(400)
-        response_status = 200
-        response_msg = 'patch student with id {} success'.format(id)
         response_obj = {
-            'status': response_status,
-            'msg': response_msg,
-            'data': data
+            'status': 200,
+            'msg': 'patch student with id {} success'.format(id),
+            'data': data,
         }
         return response_obj         
 
@@ -134,13 +125,11 @@ class ResourceStudentList(Resource):
     @viewfunclog
     @marshal_with(fields_student_list_response)
     def get(self):
-        response_status = 200
-        response_msg = 'all student data'
-        response_data = Student.query.all()
+        data = Student.query.all()
         response_obj = {
-            'status': response_status,
-            'msg': response_msg,
-            'data': response_data
+            'status': 200,
+            'msg': 'all student data',
+            'data': data
         }
         return response_obj      
 
@@ -156,11 +145,9 @@ class ResourceStudentList(Resource):
         data.exampass = r_exampass
         if not data.save():
             abort(400)
-        response_status = 200
-        response_msg = 'post student with name {} success'.format(r_name)
         response_obj = {
-            'status': response_status,
-            'msg': response_msg,
+            'status': 200,
+            'msg': 'post student with name {} success'.format(r_name),
             'data': data
         }
         return response_obj

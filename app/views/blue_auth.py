@@ -5,7 +5,7 @@ from flask_login import login_user, logout_user, login_required
 from app.models.sqlite import User
 from app.lib.mydecorator import viewfunclog
 from app.lib.mylogger import logger_module1
-from app.views.blue_index import blue_index
+from app.views.blue_main import blue_main
 
 
 blue_auth = Blueprint('blue_auth', __name__, url_prefix='/auth')
@@ -24,7 +24,7 @@ def login():
         return render_template('auth_login.html', warning="login failed!")
     else:
         login_user(user)
-        return redirect(url_for('blue_index.vf_index'))
+        return redirect(url_for('blue_main.vf_index'))
 
 @blue_auth.route('/logout')
 @viewfunclog

@@ -73,13 +73,16 @@ class ResourceUserList(Resource):
         }
         return response_obj, 201, {'Location': url_for('get_user', id = user.id, _external = True)}        
 
-class ResourceToken(Resource):
+# class ResourceToken(Resource):
+class ResourceLogin(Resource):
     # @http_basic_auth.login_required
     @my_login_required
     @viewfunclog
     def post(self):
         token = g.user.generate_auth_token()
         return {
+            'msg': 'login success',
+            'status': 201,
             'username':g.user.username,
             # 'token': token.decode('ascii'),
             'token': token if type(token) is str else token.decode('ascii'),
@@ -114,11 +117,11 @@ class ResourcePermissionTest(Resource):
 
 api_auth.add_resource(ResourceUserSingle, '/user/<int:id>', endpoint='get_user')
 api_auth.add_resource(ResourceUserList, '/users', '/register', endpoint='get_users')
-api_auth.add_resource(ResourceToken, '/token')
+api_auth.add_resource(ResourceLogin, '/login')
 api_auth.add_resource(ResourceLoginTest, '/logintest')
 api_auth.add_resource(ResourcePermissionTest, '/permissiontest')
 
-# api verification example by crul
+# api verification example by crul (legacy1 and legacy2)
 # 1. get token
 # curl -u user1:123456 -i -X GET http://10.30.30.101:4000/api/auth/token
 # curl -X GET 'http://10.30.30.101:4000/api/auth/token' --header 'Authorization: Basic dXNlcjE6MTIzNDU2'
