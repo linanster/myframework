@@ -14,7 +14,7 @@ sqlite/*
 venv/
 # migrations/
 cache/*
-app/static/*
+upload/*
 
 # 3.ignore specified file
 
@@ -24,4 +24,4 @@ app/static/*
 !sqlite/.gitkeep
 !doc/.gitkeep
 !cache/.gitkeep
-!app/static/upload/.gitkeep
+!upload/.gitkeep

@@ -4,8 +4,9 @@ import os
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 
-from app.myglobals import uploadfolder
+from app.myglobals import uploadfolder, topdir
 from app.lib.mydecorator import viewfunclog
+from app.lib.myauth import my_login_required
 
 api_file = Api(prefix='/api/file/')
 
@@ -24,6 +25,7 @@ class ResourceFile(Resource):
     def get(self):
         pass
 
+    @my_login_required
     @viewfunclog
     def put(self):
         # file = request.files.get('file')
@@ -46,7 +48,7 @@ class ResourceFile(Resource):
         return {
             'status': 201,
             'msg': 'upload success',
-            'location': destfile,
+            'location': destfile.lstrip(topdir),
         }
 
 class ResourceFiles(Resource):

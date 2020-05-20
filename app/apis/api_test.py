@@ -30,7 +30,6 @@ class ResourceTest2(Resource):
             'password': password
         }
 
-
 class ResourceTest3(Resource):
     @viewfunclog
     def get(self):
@@ -39,6 +38,18 @@ class ResourceTest3(Resource):
             'payload': payload
         }
 
+class ResourceTest4(Resource):
+    @viewfunclog
+    def get(self):
+        data = request.data
+        return {
+            'msg':'ok',
+            'type': str(type(data)),
+            'size': len(data),
+        }
+
+
 api_test.add_resource(ResourceTest1, '/test1')
 api_test.add_resource(ResourceTest2, '/test2')
 api_test.add_resource(ResourceTest3, '/test3')
+api_test.add_resource(ResourceTest4, '/test4')
