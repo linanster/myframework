@@ -14,3 +14,8 @@ def create_app():
     init_ext(app)
     load_middleware(app)
     return app
+
+def envinfo():
+    import sys
+    print('==sys.version==',sys.version)
+    print('==sys.executable==',sys.executable)

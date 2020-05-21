@@ -40,6 +40,7 @@ def my_login_required(func):
         
 # 1. this is decorator
 # 2. it should be called right after @my_login_required
+# 3. g.user is set by my_login_required
 def my_permission_required(permission):
     def inner1(func):
         def inner2(*args, **kwargs):

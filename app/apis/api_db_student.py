@@ -54,7 +54,7 @@ class ResourceStudent(Resource):
     # 1.查看单条记录
     def get(self, id):
         response_obj = {
-            'status': 200,
+            'status': 202,
             'msg': 'student with id {}'.format(id),
             'data': Student.query.get(id),
         }
@@ -70,7 +70,7 @@ class ResourceStudent(Resource):
         if not data.delete():
             abort(400)
         response_obj = {
-            'status': 200,
+            'status': 201,
             'msg': 'delete student with id {} success'.format(id),
             'data': data,
         }
@@ -96,7 +96,7 @@ class ResourceStudent(Resource):
         if not data.save():
             abort(400)
         response_obj = {
-            'status': 200,
+            'status': 201,
             'msg': 'put student with id {} success'.format(id),
             'data': data,
         }
@@ -118,7 +118,7 @@ class ResourceStudent(Resource):
         if not data.save():
             abort(400)
         response_obj = {
-            'status': 200,
+            'status': 201,
             'msg': 'patch student with id {} success'.format(id),
             'data': data,
         }
@@ -133,7 +133,7 @@ class ResourceStudents(Resource):
     def get(self):
         data = Student.query.all()
         response_obj = {
-            'status': 200,
+            'status': 202,
             'msg': 'all student data',
             'data': data
         }
@@ -153,7 +153,7 @@ class ResourceStudents(Resource):
         if not data.save():
             abort(400)
         response_obj = {
-            'status': 200,
+            'status': 201,
             'msg': 'post student with name {} success'.format(r_name),
             'data': data
         }

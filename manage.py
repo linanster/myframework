@@ -4,8 +4,10 @@ from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 import copy
 
-from app import create_app
+from app import create_app, envinfo
 from app.models import db_sqlite
+
+import sys
 
 app = create_app()
 
@@ -37,6 +39,8 @@ def createdb(table=False, data=False, hist=False):
         Student.seed()
         User.seed()
     if hist:
+        print('legacy command, exit!')
+        return 0
         print('==create history tables==')
         db_sqlite.create_all(bind='sqlite_db4_hist')
         StatsCount.seed()
@@ -59,6 +63,8 @@ def deletedb(table=False, data=False, hist=False):
         User.query.delete()
         db_sqlite.session.commit()
     if hist:
+        print('legacy command, exit!')
+        return 0
         print('==delete history tables==')
         db_sqlite.drop_all(bind='sqlite_db4_hist')
 
@@ -94,6 +100,25 @@ def get_student(name='nan'):
         print(stu)
 
 
+@app.template_global('now')
+def get_now_timestamp():
+    import time
+    return time.time()
+
+@app.template_global('visitcount')
+def get_visitcount():
+    from app.lib.modelutils import get_visitcount
+    return get_visitcount()
+
+@app.template_filter('timeformat')
+def timeformat(timestamp):
+    import time
+    return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp))
+
+
+
+
 # python3 manage.py runserver -h 0.0.0.0 -p 5000 -r -d
 if __name__ == '__main__':
+    envinfo()
     manager.run()

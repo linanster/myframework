@@ -1,10 +1,10 @@
 # coding:utf8
 #
-from app import create_app
+from app import create_app, envinfo
 import sys
 
-print('==sys.version==',sys.version)
-print('==sys.executable==',sys.executable)
+
+envinfo()
 
 application_framework = create_app()
 
@@ -25,4 +25,5 @@ def timeformat(timestamp):
 
 
 if __name__ == '__main__':
+    # envinfo()
     application_framework.run(host='0.0.0.0', port=5000, debug=True)

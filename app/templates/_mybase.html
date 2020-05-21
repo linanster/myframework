@@ -1,8 +1,6 @@
 {% block doc %}
 <!DOCTYPE html>
 <html lang="en">
-
-
 <head>
 {% block head %}
     <meta charset="UTF-8">
@@ -21,9 +19,9 @@
     {% if current_user.is_authenticated %}
         Welcome, {{ current_user.username }} |
         <a href="{{ url_for('blue_auth.logout') }}">logout</a> |
+        <br>
+        <br>
     {% endif %}
-    <br>
-    <br>
 {% endblock body %}
 </body>
 

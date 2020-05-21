@@ -32,19 +32,19 @@ class ResourceFile(Resource):
 
         if not file:
             return {
-                'status': 401,
+                'status': 406,
                 'msg':'no file found',
             }
         if file.filename == '':
             return {
-                'status': 401,
+                'status': 406,
                 'msg': 'no file seleted',
             }
         filename = secure_filename(file.filename)
         destfile = os.path.join(uploadfolder, filename)
         file.save(destfile)
         return {
-            'status': 200,
+            'status': 201,
             'msg': 'upload success',
             'location': destfile,
         }
@@ -54,7 +54,7 @@ class ResourceFiles(Resource):
     def get(self):
         filenamelist = os.listdir(uploadfolder)
         return {
-            'status':200,
+            'status':202,
             'msg': 'all files',
             'filelist': filenamelist,
         }
