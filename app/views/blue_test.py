@@ -4,6 +4,7 @@ import os
 from app.lib.mydecorator import viewfunclog
 from app.lib.modelutils import get_running
 
+from app.lib.socketioutils import watch_log, send_msg
 
 blue_test = Blueprint('blue_test', __name__, url_prefix='/test')
 
@@ -22,5 +23,7 @@ def vf_test1():
 @blue_test.route('/test2')
 @viewfunclog
 def vf_test2():
+    watch_log()
+    send_msg()
     return render_template('test_test2.html')
 
