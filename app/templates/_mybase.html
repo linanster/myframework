@@ -16,12 +16,14 @@
 
 <body>
 {% block body %}
-    {% if current_user.is_authenticated %}
-        Welcome, {{ current_user.username }} |
-        <a href="{{ url_for('blue_auth.logout') }}">logout</a> |
-        <br>
-        <br>
-    {% endif %}
+    {% block login %}
+        {% if current_user.is_authenticated %}
+            Welcome, {{ current_user.username }} |
+            <a href="{{ url_for('blue_auth.logout') }}">logout</a> |
+            <br>
+            <br>
+        {% endif %}
+    {% endblock login %}
 {% endblock body %}
 </body>
 
