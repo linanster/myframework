@@ -5,18 +5,12 @@ from app.lib.mydecorator import processmaker, threadmaker
 
 
 @threadmaker
-def watch_log():
-    pass
-
-@threadmaker
-def send_msg():
+def send_msg_hello():
     time.sleep(1)
     for i in range(1, 6):
         msg = 'hello, %d' % i
-        # socketio.emit('mylog', msg, namespace='/test', broadcast=True)
-        socketio.emit('mymsg', msg, namespace='/test', broadcast=True)
+        socketio.emit('my_msg', msg, namespace='/test', broadcast=True)
         time.sleep(1)
     msg = 'done'
-    # socketio.emit('mylog', msg, namespace='/test', broadcast=True)
-    socketio.emit('mymsg', msg, namespace='/test', broadcast=True)
+    socketio.emit('my_msg', msg, namespace='/test', broadcast=True)
 

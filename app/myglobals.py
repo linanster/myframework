@@ -6,3 +6,6 @@ logfolder = os.path.abspath(os.path.join(topdir, "log"))
 cachefolder = os.path.abspath(os.path.join(topdir, "cache"))
 uploadfolder = os.path.abspath(os.path.join(topdir, "upload"))
 
+
+# settings
+LOG_MONITOR_ENABLE = False

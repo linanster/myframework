@@ -5,19 +5,50 @@
     <script src="{{ url_for('static',filename='js/jquery-1.12.4.min.js') }}"></script>
 
     <script type="text/javascript" charset="utf-8">
+
+        function scroll_output(divid) {
+            var div = document.getElementById(divid);
+            div.scrollTop = div.scrollHeight;
+        }
+
+        function clean_output(divid) {
+            var div = document.getElementById(divid);
+            div.innerHTML = "";
+        }
+
+
         $(document).ready(function () {
             namespace = '/test';
             // var socket = io(namespace);
             var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
 
             // 1. log monitor
-            socket.on('mylog', function (msg) {
+            socket.on('my_log', function (msg) {
                 $('#log').append('<br>' + $('<div/>').text(msg).html());
             });
             // 2. msg monitor
-            socket.on('mymsg', function (msg) {
+            socket.on('my_msg', function (msg) {
                 $('#msg').append('<br>' + $('<div/>').text(msg).html());
             });
+            // 3. background monitor
+            socket.on('my_background', function(msg, cb) {
+                $('#background').append('<br>' + $('<div/>').text('Received #' + msg.count + ': ' + msg.data).html());
+                if (cb)
+                    cb();
+            });
+
+            // 3. auto scroll down
+            $('#log').on('DOMNodeInserted', function () {
+                scroll_output('log');
+            });
+            $('#msg').on('DOMNodeInserted', function () {
+                scroll_output('msg');
+            });
+            $('#background').on('DOMNodeInserted', function () {
+                scroll_output('background');
+            });
+
+
         });
     </script>
 {% endblock scripts %}
@@ -25,10 +56,16 @@
 {% block body %}
     {{ super() }}
     <p>1. log monitor</p>
-    <div id="log" style="overflow:auto; height: 250px; width: auto; border: 1px solid #999"></div>
+    <div id="log" style="overflow:auto; height: 200px; width: auto; border: 1px solid #999"></div>
+    <input value="clean up" type=button onclick="clean_output('log')"> 
     <br>
     <p>2. msg monitor</p>
-    <div id="msg" style="overflow:auto; height: 250px; width: auto; border: 1px solid #999"></div>
+    <div id="msg" style="overflow:auto; height: 200px; width: auto; border: 1px solid #999"></div>
+    <input value="clean up" type=button onclick="clean_output('msg')"> 
+    <br>
+    <p>3. background monitor</p>
+    <div id="background" style="overflow:auto; height: 200px; width: auto; border: 1px solid #999"></div>
+    <input value="clean up" type=button onclick="clean_output('background')"> 
 
 
 {% endblock body %}

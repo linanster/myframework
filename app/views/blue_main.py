@@ -4,9 +4,6 @@ import os
 from app.lib.mydecorator import viewfunclog
 from app.lib.modelutils import get_running
 
-from app.views.blue_test import blue_test
-
-
 blue_main = Blueprint('blue_main', __name__)
 
 @blue_main.route('/')

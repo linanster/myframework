@@ -3,13 +3,14 @@ import os
 
 from app.lib.mydecorator import viewfunclog
 from app.lib.modelutils import get_running
-
-from app.lib.socketioutils import watch_log, send_msg
+from app.lib.socketioutils import send_msg_hello
+from app.views.blue_main import blue_main
 
 blue_test = Blueprint('blue_test', __name__, url_prefix='/test')
 
 @blue_test.route('/')
 @blue_test.route('/index')
+@viewfunclog
 def vf_index():
     return render_template('test_index.html')
 
@@ -23,7 +24,13 @@ def vf_test1():
 @blue_test.route('/test2')
 @viewfunclog
 def vf_test2():
-    watch_log()
-    send_msg()
     return render_template('test_test2.html')
+
+
+@blue_test.route('/cmd_send_msg_hello', methods=['POST'])
+@viewfunclog
+def cmd_send_msg_hello():
+    send_msg_hello()
+    return redirect(url_for('blue_main.vf_index'))
+
 
