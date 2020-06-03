@@ -48,6 +48,13 @@
                 scroll_output('background');
             });
 
+            // 4. send sockeio message
+            $("#btn1_send_msg").click(function(){
+                // var url = 'http://' + document.domain + ':' + 4000 + '/api/cmd/send_msg_hello';
+                var url = location.protocol + '//' + document.domain + ':' + location.port + '/api/cmd/send_msg_hello';
+                alert(url);
+                $.post(url);
+            });
 
         });
     </script>
@@ -62,6 +69,7 @@
     <p>2. msg monitor</p>
     <div id="msg" style="overflow:auto; height: 200px; width: auto; border: 1px solid #999"></div>
     <input value="clean up" type=button onclick="clean_output('msg')"> 
+    <input type="button" id="btn1_send_msg" value='send msg'>
     <br>
     <p>3. background monitor</p>
     <div id="background" style="overflow:auto; height: 200px; width: auto; border: 1px solid #999"></div>

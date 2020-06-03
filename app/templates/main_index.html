@@ -1,5 +1,6 @@
 {% extends '_mybase.html' %}
 
+
 {% block body %}
     {{ super() }}
     <p>MyFramework Home</p>
@@ -7,11 +8,7 @@
     <a href="{{ url_for('blue_admin.vf_index') }}">1.1 admin</a> <br>
     <a href="{{ url_for('blue_test.vf_index') }}">2.2 test</a>
     <p>2. APIs</p>
-    <a href="{{ url_for('send_msg_hello') }}">send_msg_hello</a>
-    <p>3. Buttons</p>
-    <form style="display: inline" action="{{ url_for('blue_test.cmd_send_msg_hello') }}" method="post">
-        <button type="submit">send socketio msg</button>
-    </form>
+    <a href="{{ url_for('api_send_msg_hello') }}">send_msg_hello</a>
 
 {% endblock body %}
 
