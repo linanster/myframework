@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>日志监视器</title>
+
+    <script src="{{ url_for('static',filename='socket.io.js') }}"></script>
+    <script src="{{ url_for('static',filename='jquery-1.12.4.min.js') }}"></script>
+    <script type="text/javascript" charset="utf-8">
+
+         function scroll_log() {
+            var div = document.getElementById('log');
+            div.scrollTop = div.scrollHeight;
+        }
+        function clean_output(divid) {
+            var div = document.getElementById(divid);
+            div.innerHTML = "";
+        }
+
+
+        $(document).ready(function () {
+
+            namespace = '/test';
+            // var socket = io(namespace);
+            var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+
+            // 1. log monitor
+            socket.on('mylog', function (msg) {
+                $('#log').append('<br>' + $('<div/>').text(msg).html());
+            });
+
+
+            // 4. auto scroll down log output
+            $('#log').on('DOMNodeInserted', function () {
+                scroll_log();
+            });
+        });
+    </script>
+    
+
+</head>
+<body>
+    <span>实时日志:</span>  
+        | <input value="清空" type=button onclick="clean_output('log')"> 
+        | <input value="刷新" type=button onclick="window.location.reload()"> 
+        | <input value="关闭" type=button onclick="window.close()"> 
+        | <span id='message'></span>
+    <div id="log" style="overflow:auto; height: 500px; width: auto; border: 1px solid #999"></div>
+</body>
+</html>

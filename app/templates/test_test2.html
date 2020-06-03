@@ -21,17 +21,19 @@
             namespace = '/test';
             // var socket = io(namespace);
             var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+            var socket_logmonitor = io.connect(location.protocol + '//' + document.domain + ':' + 4001 + namespace);
 
             // 1. log monitor
-            socket.on('my_log', function (msg) {
+            // socket.on('mylog', function (msg) {
+            socket_logmonitor.on('mylog', function (msg) {
                 $('#log').append('<br>' + $('<div/>').text(msg).html());
             });
             // 2. msg monitor
-            socket.on('my_msg', function (msg) {
+            socket.on('mymsg', function (msg) {
                 $('#msg').append('<br>' + $('<div/>').text(msg).html());
             });
             // 3. background monitor
-            socket.on('my_background', function(msg, cb) {
+            socket.on('mybackground', function(msg, cb) {
                 $('#background').append('<br>' + $('<div/>').text('Received #' + msg.count + ': ' + msg.data).html());
                 if (cb)
                     cb();
