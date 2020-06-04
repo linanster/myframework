@@ -3,29 +3,19 @@
 {% block scripts %}
     <script src="{{ url_for('static',filename='js/socket.io.js') }}"></script>
     <script src="{{ url_for('static',filename='js/jquery-1.12.4.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/mycommon.js') }}"></script>
 
     <script type="text/javascript" charset="utf-8">
-
-        function scroll_output(divid) {
-            var div = document.getElementById(divid);
-            div.scrollTop = div.scrollHeight;
-        }
-
-        function clean_output(divid) {
-            var div = document.getElementById(divid);
-            div.innerHTML = "";
-        }
-
 
         $(document).ready(function () {
             namespace = '/test';
             // var socket = io(namespace);
             var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
-            var socket_logmonitor = io.connect(location.protocol + '//' + document.domain + ':' + 4001 + namespace);
+            // var socket_logmonitor = io.connect(location.protocol + '//' + document.domain + ':' + 4001 + namespace);
 
             // 1. log monitor
-            // socket.on('mylog', function (msg) {
-            socket_logmonitor.on('mylog', function (msg) {
+            socket.on('mylog', function (msg) {
+            // socket_logmonitor.on('mylog', function (msg) {
                 $('#log').append('<br>' + $('<div/>').text(msg).html());
             });
             // 2. msg monitor
@@ -53,7 +43,8 @@
             // 4. send sockeio message
             $("#btn1_send_msg").click(function(){
                 // var url = 'http://' + document.domain + ':' + 4000 + '/api/cmd/send_msg_hello';
-                var url = location.protocol + '//' + document.domain + ':' + location.port + '/api/cmd/send_msg_hello';
+                // var url = location.protocol + '//' + document.domain + ':' + location.port + '/api/cmd/send_msg_hello';
+                var url = location.protocol + '//' + document.domain + ':' + location.port + "{{ url_for('api_cmd_sendmsg') }}";
                 alert(url);
                 $.post(url);
             });

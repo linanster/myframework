@@ -26,11 +26,9 @@ def vf_test1():
 def vf_test2():
     return render_template('test_test2.html')
 
-
-@blue_test.route('/cmd_send_msg_hello', methods=['POST'])
+@blue_test.route('/test4')
 @viewfunclog
-def cmd_send_msg_hello():
-    send_msg_hello()
-    return redirect(url_for('blue_main.vf_index'))
+def vf_test4():
+    return render_template('test_test4.html')
 
 

@@ -1,0 +1,50 @@
+{% extends '_mybase.html' %}
+
+{% block scripts %}
+    <script src="{{ url_for('static',filename='js/socket.io.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/jquery-1.12.4.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/mycommon.js') }}"></script>
+
+    <script type="text/javascript" charset="utf-8">
+
+        $(document).ready(function () {
+
+            // 1. auto scroll down
+            $('#cmd_output').on('DOMNodeInserted', function () {
+                scroll_output('output');
+            });
+
+            // 2. run button click event
+            $("#btn1_run").click(function(){
+                var cmd = $("#cmd_input").val();
+                var data = {'cmd': cmd};
+                var url = location.protocol + '//' + document.domain + ':' + location.port + "{{ url_for('api_cmd_onlinecmd') }}";
+                // alert(cmd)
+                // alert(url);
+                $.post(
+                    url,
+                    data,
+                    function(data){
+                        // alert(data.output);
+                        $('#cmd_output').append('<br>' + $('<div/>').text(data.output).html());
+                    }, 
+                    "json"
+                );
+            });
+
+
+        });
+    </script>
+{% endblock scripts %}
+
+
+{% block body %}
+    {{super()}}
+    <p>1. command input</p>
+    <input type="text" id="cmd_input" size="35" placeholder="command">
+    <input type="button" id="btn1_run" value="run">
+
+    <p>2. command output</p>
+    <div id="cmd_output" style="overflow:auto; height: 500px; width: auto; border: 1px solid #999; white-space: pre-wrap;"></div>
+    <input value="clean up" type=button onclick="clean_output('cmd_output')">
+{% endblock body %}
