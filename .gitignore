@@ -8,7 +8,7 @@
 **/__pycache__
 
 # 2.ignore folder
-log/*
+logs/*
 scripts/ignore/*
 sqlite/*
 venv/
@@ -19,7 +19,7 @@ upload/*
 # 3.ignore specified file
 
 # 4.exceptions that not ignore
-!log/.gitkeep
+!logs/.gitkeep
 !scripts/ignore/.gitkeep
 !sqlite/.gitkeep
 !doc/.gitkeep
