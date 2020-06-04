@@ -75,6 +75,18 @@ def init_hist():
     print('==insert initial history data==')
     StatsCount.seed()
 
+@manager.command
+def cleanup(log=False, pycache=False, all=False):
+    "my cmd: clean up logs and __pycache__"
+    from app.lib.myutils import cleanup_log, cleanup_pycache
+    if all or log:
+        print('==cleanup log==')
+        cleanup_log()
+    if all or pycache:
+        print('==cleanup pycache==')
+        cleanup_pycache()
+
+
 @manager.option('-k', '--key', dest="key", default='r_running')
 @manager.option('-f', '--field', dest="field", default='field1')
 # python3 manage.py get_sysinfo
@@ -120,5 +132,5 @@ def timeformat(timestamp):
 
 # python3 manage.py runserver -h 0.0.0.0 -p 5000 -r -d
 if __name__ == '__main__':
-    envinfo()
+    # envinfo()
     manager.run()
