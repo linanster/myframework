@@ -1,0 +1,15 @@
+[Unit]
+Description=My Framework Logmonitor Service
+
+[Service]
+Type=forking
+ExecStart=/git/myframework/run.sh --logmonitor --start
+ExecReload=
+ExecStop=/git/myframework/run.sh --logmonitor --stop
+Restart=on-failure
+RestartSec=42s
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=graphical.target
+

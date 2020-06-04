@@ -1,20 +1,28 @@
 #!/usr/bin/env bash
 #
-set -o errexit
+# set -o errexit
 
-if [ $# -eq 0 ]; then
-    echo "run.sh [--start] [--stop] [--status] [--init]"
-    exit 1
-fi
-if [ "$1" != "--start" -a "$1" != "--stop" -a "$1" != "--status" -a "$1" != "--init" ]; then
-    echo "run.sh [--start] [--stop] [--status] [--init]"
-    exit 1
-fi
+# 1.variables definition
 
+usage=$"
+Usage: run.sh [--start] [--stop] [--status] [--init]
+              [--logmonitor --start/--stop/--status]
+"
 workdir=$(cd "$(dirname $0)" && pwd)
-cd "$workdir"
 
-if [ "$1" == "--init" ]; then
+# 2.functions definition
+
+function activate_venv() {
+    if [ -d venv ]; then
+        source ./venv/bin/activate || source ./venv/Script/activate
+    else
+        echo "==venv error=="
+    exit 1
+    fi
+}
+
+
+function run_init(){
     pip3 install virtualenv
     virtualenv venv
     source ./venv/bin/activate
@@ -27,53 +35,115 @@ if [ "$1" == "--init" ]; then
         echo "==init config fail=="
         exit 1
     fi
-fi
+}
 
-if [ -d venv ]; then
-    source ./venv/bin/activate
-else
-    echo "==venv error=="
-    exit 1
-fi
 
-# cd "$workdir/app"
-
-if [ "$1" == '--start' ]; then
-    # todo --daemon
-    # todo --user user1 --group user1
-    if [ "$2" == '' ]; then
-        gunicorn --daemon --workers 1 --bind 0.0.0.0:4000 --timeout 300 --worker-class eventlet wsgi:application_framework
-        echo 'gunicorn --daemon --workers 1 --bind 0.0.0.0:4000 --timeout 300 --worker-class eventlet wsgi:application_framework'
-    elif [ "$2" == '--nodaemon' ]; then
+function run_start(){
+    activate_venv
+    if [ "$1" == '--nodaemon' ]; then
         gunicorn --workers 1 --bind 0.0.0.0:4000 --timeout 300 --worker-class eventlet wsgi:application_framework
         echo "gunicorn --workers 1 --bind 0.0.0.0:4000 --timeout 300 --worker-class eventlet wsgi:application_framework"
+    elif [ "$1" == '' ]; then
+        gunicorn --daemon --workers 1 --bind 0.0.0.0:4000 --timeout 300 --worker-class eventlet wsgi:application_framework
+        echo 'gunicorn --daemon --workers 1 --bind 0.0.0.0:4000 --timeout 300 --worker-class eventlet wsgi:application_framework'
     else
         echo 'wrong options!'
         exit 1
     fi
-    ps -ef | fgrep "gunicorn" | grep "application_framework" | awk '{if($3==1) print $2}'
-    exit 0
-fi
-
-if [ "$1" == "--stop" ]; then
     pid=$(ps -ef | fgrep "gunicorn" | grep "application_framework" | awk '{if($3==1) print $2}')
+    echo "$pid"
+    exit 0
+}
+
+function run_status(){
+    pid=$(ps -ef | fgrep "gunicorn" | grep "application_framework" | awk '{if($3==1) print $2}')
+    echo "$pid"
     if [ "$pid" == "" ]; then
-        echo "not running" 
+        echo "stopped"
+    else
+        echo "started"
+    fi
+    exit 0
+}
+
+function run_stop(){
+    pid=$(ps -ef | fgrep "gunicorn" | grep "application_framework" | awk '{if($3==1) print $2}')
+    echo "$pid"
+    if [ "$pid" == "" ]; then
+        echo "not running"
     else
         echo "kill $pid"
         kill "$pid"
     fi
     exit 0
-fi
+}
 
-if [ "$1" == "--status" ]; then
-    pid=$(ps -ef | fgrep "gunicorn" | grep "application_framework" | awk '{if($3==1) print $2}')
-    echo "$pid"
-    if [ "$pid" == "" ]; then
-        echo "stopped" 
+function run_logmonitor(){
+    if [ "$1" == "--start" ]; then
+        activate_venv
+        cd logmonitor
+        gunicorn --daemon --workers 1 --bind 0.0.0.0:4001 --timeout 300 --worker-class eventlet app:app_myframework_logmonitor
+        echo "gunicorn --daemon --workers 1 --bind 0.0.0.0:4001 --timeout 300 --worker-class eventlet app:app_myframework_logmonitor"
+        pid=$(ps -ef | fgrep "gunicorn" | grep "app_myframework_logmonitor" | awk '{if($3==1) print $2}')
+        echo "$pid"
+    elif [ "$1" == "--stop" ]; then
+        pid=$(ps -ef | fgrep "gunicorn" | grep "app_myframework_logmonitor" | awk '{if($3==1) print $2}')
+        echo "$pid"
+        if [ "$pid" == "" ]; then
+            echo "not running"
+        else
+            echo "kill $pid"
+            kill "$pid"
+        fi
+    elif [ "$1" == "--status" ]; then
+        pid=$(ps -ef | fgrep "gunicorn" | grep "app_myframework_logmonitor" | awk '{if($3==1) print $2}')
+        echo "$pid"
+        if [ "$pid" == "" ]; then
+            echo "stopped"
+        else
+            echo "started"
+        fi
     else
-        echo "started"
+        echo "${usage}"
     fi
     exit 0
+
+}
+
+# 3.start code
+
+cd "$workdir"
+
+if [ $# -eq 0 ]; then
+    echo "${usage}"
+    exit 1
+fi
+
+if [ $# -ge 1 ]; then
+  case $1 in
+    --help|-h)
+        echo "$usage"
+        exit 0
+        ;;
+    --init)
+        run_init
+        ;;
+    --start)
+        run_start $2
+        ;;
+    --status)
+        run_status
+        ;;
+    --stop)
+        run_stop
+        ;;
+    --logmonitor)
+        run_logmonitor $2
+        ;;
+    *)
+        echo "$usage"
+        exit 1
+        ;;
+  esac
 fi
 

@@ -40,38 +40,59 @@ echo
 echo
 
 
-function install_service(){
+function install_main_service(){
   cd "${scriptdir}"
-  cp myframework.service /usr/lib/systemd/system
+  cp myframework-main.service /usr/lib/systemd/system
   systemctl daemon-reload
-  systemctl enable myframework.service
-  systemctl restart myframework.service
-  systemctl status myframework.service
+  systemctl enable myframework-main.service
+  systemctl restart myframework-main.service
+  systemctl status myframework-main.service
   echo
 }
 
-function uninstall_service(){
+function uninstall_main_service(){
   cd "${scriptdir}"
-  systemctl stop myframework.service
-  systemctl disable myframework.service
-  rm -f /usr/lib/systemd/system/myframework.service
+  systemctl stop myframework-main.service
+  systemctl disable myframework-main.service
+  rm -f /usr/lib/systemd/system/myframework-main.service
+  systemctl daemon-reload
+  echo
+}
+
+function install_logmonitor_service(){
+  cd "${scriptdir}"
+  cp myframework-logmonitor.service /usr/lib/systemd/system
+  systemctl daemon-reload
+  systemctl enable myframework-logmonitor.service
+  systemctl restart myframework-logmonitor.service
+  systemctl status myframework-logmonitor.service
+  echo
+}
+
+function uninstall_logmonitor_service(){
+  cd "${scriptdir}"
+  systemctl stop myframework-logmonitor.service
+  systemctl disable myframework-logmonitor.service
+  rm -f /usr/lib/systemd/system/myframework-logmonitor.service
   systemctl daemon-reload
   echo
 }
 
 
 function option1(){
-  install_service
+  install_main_service
   green "option1 done!"
 }
 function option2(){
-  uninstall_service
+  uninstall_main_service
   green "option2 done!"
 }
 function option3(){
+  install_logmonitor_service
   green "option3 done!"
 }
 function option4(){
+  uninstall_logmonitor_service
   green "option4 done!"
 }
 function option5(){
@@ -102,8 +123,10 @@ function option12(){
 
 cat << eof
 ====
-1) install service
-2) uninstall service
+1) install main service
+2) uninstall main service
+3) install logmonitor service
+4) uninstall logmonitor service
 q) quit 
 ====
 eof
@@ -116,6 +139,14 @@ while echo; read -p "Enter your option: " option; do
       ;;
     2)
       option2
+      break
+      ;;
+    3)
+      option3
+      break
+      ;;
+    4)
+      option4
       break
       ;;
     q|Q)
