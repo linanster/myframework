@@ -4,6 +4,9 @@ from threading import Lock
 from flask import Flask, render_template, session, request, copy_current_request_context
 from flask_socketio import SocketIO, emit, disconnect
 import subprocess
+import os
+
+from myglobals import logfolder
 
 async_mode = None
 
@@ -15,8 +18,8 @@ thread = None
 thread_lock = Lock()
 
 def watch_log():
-    # logfile = os.path.join(logfolder, 'log_module1.txt')
-    logfile = '/git/myframework/logs/log_module1.txt'
+    logfile = os.path.join(logfolder, 'log_module1.txt')
+    # logfile = '/git/myframework/logs/log_module1.txt'
     p = subprocess.Popen("tail -f {}".format(logfile), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     while True:
         output = p.stdout.readline().decode('utf-8')[0:-1]
