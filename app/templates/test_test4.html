@@ -1,7 +1,6 @@
 {% extends '_mybase.html' %}
 
 {% block scripts %}
-    <script src="{{ url_for('static',filename='js/socket.io.js') }}"></script>
     <script src="{{ url_for('static',filename='js/jquery-1.12.4.min.js') }}"></script>
     <script src="{{ url_for('static',filename='js/mycommon.js') }}"></script>
 
@@ -18,7 +17,8 @@
             $("#btn1_run").click(function(){
                 var cmd = $("#cmd_input").val();
                 var data = {'cmd': cmd};
-                var url = location.protocol + '//' + document.domain + ':' + location.port + "{{ url_for('api_cmd_onlinecmd') }}";
+                // var url = location.protocol + '//' + document.domain + ':' + location.port + "{{ url_for('api_cmd_onlinecmd') }}";
+                var url = location.protocol + '//' + document.domain + ':' + location.port + "{{ url_for('api_cmd_onlinecmd') }}" + "?cmd=" + cmd;
                 // alert(cmd)
                 // alert(url);
                 $.post(
@@ -31,8 +31,32 @@
                     "json"
                 );
             });
-
-
+            $("#btn2_calc").click(function(){
+                if(window.confirm("confirm?")==false)
+                    return false;
+                var cmd = "cal";
+                var url = location.protocol + '//' + document.domain + ':' + location.port + "{{ url_for('api_cmd_onlinecmd') }}" + "?cmd=" + cmd;
+                $.post(
+                    url,
+                    function(data){
+                        $('#cmd_output').append('<br>' + $('<div/>').text(data.output).html());
+                    }, 
+                    "json"
+                );
+            });
+            $("#btn3_logmonitor").click(function(){
+                if(window.confirm("confirm?")==false)
+                    return false;
+                var cmd = "systemctl status myframework-logmonitor";
+                var url = location.protocol + '//' + document.domain + ':' + location.port + "{{ url_for('api_cmd_onlinecmd') }}" + "?cmd=" + cmd;
+                $.post(
+                    url,
+                    function(data){
+                        $('#cmd_output').append('<br>' + $('<div/>').text(data.output).html());
+                    }, 
+                    "json"
+                );
+            });
         });
     </script>
 {% endblock scripts %}
@@ -40,11 +64,16 @@
 
 {% block body %}
     {{super()}}
-    <p>1. command input</p>
+    <p>1. command button</p>
+    <input type="button" id="btn2_calc" value="calc">
+    <br>
+    <input type="button" id="btn3_logmonitor" value="systemctl status myframework-logmonitor">
+
+    <p>2. command input</p>
     <input type="text" id="cmd_input" size="35" placeholder="command">
     <input type="button" id="btn1_run" value="run">
 
-    <p>2. command output</p>
-    <div id="cmd_output" style="overflow:auto; height: 500px; width: auto; border: 1px solid #999; white-space: pre-wrap;"></div>
+    <p>3. command output</p>
     <input value="clean up" type=button onclick="clean_output('cmd_output')">
+    <div id="cmd_output" style="overflow:auto; height: 500px; width: auto; border: 1px solid #999; white-space: pre-wrap;"></div>
 {% endblock body %}

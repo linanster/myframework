@@ -1,5 +1,5 @@
 from flask import request, redirect
-from flask_restful import Api, Resource
+from flask_restful import Api, Resource, reqparse
 import subprocess as s
 
 from app.lib.mydecorator import viewfunclog
@@ -7,15 +7,29 @@ from app.lib.socketioutils import send_msg_hello
 
 api_cmd = Api(prefix='/api/cmd/')
 
+
+parser = reqparse.RequestParser()
+parser.add_argument('cmd', type=str, location=['args', 'form'])
+
+
+
 def my_check_output(cmd):
     try:
-        output = s.check_output([cmd, ])
+        cmd_list = cmd.split(' ')
+        # print('==cmd_list==', cmd_list)
+        output = s.check_output(cmd_list, stderr=s.STDOUT)
+    # todo: subprocess.CalledProcessError can't be captured, don't know why it happen
     except s.CalledProcessError as e:
-        return str(e)
+        # print('==CalledProcessError==')
+        return e.output.decode()
     except Exception as e:
-        return str(e)
+        # print('==Exception==')
+        # print(type(e))
+        try:
+            return e.output.decode()
+        except:
+            return str(e)
     else:
-        # return output.decode('utf-8')
         return output.decode()
 
 class ResourceCmd1(Resource):
@@ -37,10 +51,10 @@ class ResourceCmd2(Resource):
     @viewfunclog
     def post(self):
         # cmd = request.json.get('cmd')
-        cmd = request.form.get('cmd')
+        # cmd = request.form.get('cmd')
+        args = parser.parse_args()
+        cmd = args.get('cmd')
         output = my_check_output(cmd)
-        print('==cmd==', cmd)
-        print('==output==', output)
         return {
             'msg': 'ok',
             'method': 'post',

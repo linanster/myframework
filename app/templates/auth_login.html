@@ -1,6 +1,7 @@
 {% extends '_mybase.html' %}
 
 {% block body %}
+    {{ super()  }}
     <h1>Login</h1>
     <form action="{{ url_for('blue_auth.login') }}" method="post">
         <input type="text" name="username" placeholder="username">
