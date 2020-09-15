@@ -1,0 +1,32 @@
+{% extends '_mybase.html' %}
+
+{% block scripts %}
+    <script src="{{ url_for('static',filename='js/jquery-1.12.4.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/mycommon.js') }}"></script>
+
+    <script type="text/javascript" charset="utf-8">
+
+        $(document).ready(function () {
+            $("#btn_myip").click(function(){
+                var url = location.protocol + '//' + document.domain + ':' + location.port + "{{ url_for('api_general_myip') }}";
+                $.get(
+                    url,
+                    function(data){
+                        myip = data.myip;
+                        msg = 'Your IP Address is: ' + myip;
+                        $('#myip').css('color', 'red');
+                        $('#myip').html(msg);
+                    },
+                    "json"
+                );
+            });
+        });
+    </script>
+{% endblock scripts %}
+
+
+{% block body %}
+    {{super()}}
+    <input type="button" id="btn_myip" value="我的IP">
+    <p id="myip" style="display: inline"></p>
+{% endblock body %}

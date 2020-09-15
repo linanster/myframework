@@ -31,4 +31,8 @@ def vf_test2():
 def vf_test4():
     return render_template('test_test4.html')
 
+@blue_test.route('/test5')
+@viewfunclog
+def vf_test5():
+    return render_template('test_test5.html')
 
