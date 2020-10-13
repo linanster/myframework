@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template, flash, redirect, url_for
 import os
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user
 
 from app.models.sqlite import User
 from app.lib.mydecorator import viewfunclog
@@ -13,7 +13,7 @@ blue_auth = Blueprint('blue_auth', __name__, url_prefix='/auth')
 @blue_auth.route('/login', methods=['GET', 'POST'])
 @viewfunclog
 def login():
-    logger_module1.warn('client from {}'.format(request.remote_addr))
+    logger_module1.warn('client login from {}'.format(request.remote_addr))
     if request.method == 'GET':
         return render_template('auth_login.html')
     username = request.form.get('username')

@@ -20,16 +20,16 @@
     <a href="{{ url_for('blue_main.vf_index') }}">Home</a> |
     <a href="#">Contact</a> |
     <a href="#">About</a>
-    <br>
-    <br>
     {% block login %}
         {% if current_user.is_authenticated %}
-            Welcome, {{ current_user.username }} |
-            <a href="{{ url_for('blue_auth.logout') }}">logout</a> |
-            <br>
-            <br>
+            | Welcome, {{ current_user.username }} |
+            <a href="{{ url_for('blue_auth.logout') }}">logout</a>
+        {% else %}
+            | <a href="{{ url_for('blue_auth.login') }}">login</a>
         {% endif %}
     {% endblock login %}
+    <br>
+    <br>
 {% endblock body %}
 </body>
 

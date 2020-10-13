@@ -17,6 +17,7 @@ cache/*
 upload/*
 
 # 3.ignore specified file
+scripts/testapi/1.data
 
 # 4.exceptions that not ignore
 !logs/.gitkeep
