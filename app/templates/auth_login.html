@@ -6,6 +6,9 @@
     <form action="{{ url_for('blue_auth.login') }}" method="post">
         <input type="text" name="username" placeholder="username">
         <input type="password" name="password" placeholder="password">
+        {% if next_page %}
+            <input type="hidden" name="next" value="{{next_page}}">
+        {% endif %}
         <input type="submit">
         <br>
     </form>
