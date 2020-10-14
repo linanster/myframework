@@ -6,6 +6,9 @@ from app.lib.modelutils import get_running
 from app.lib.socketioutils import send_msg_hello
 from app.views.blue_main import blue_main
 
+from flask_login import login_required
+from app.lib.myauth import my_login_required, my_permission_required
+
 blue_test = Blueprint('blue_test', __name__, url_prefix='/test')
 
 @blue_test.route('/')
@@ -36,3 +39,18 @@ def vf_test4():
 def vf_test5():
     return render_template('test_test5.html')
 
+@blue_test.route('/test6')
+@viewfunclog
+def vf_test6():
+    return render_template('test_test6.html')
+
+
+@blue_test.route('/permission1')
+@viewfunclog
+def vf_permission1():
+    return render_template('test_permission1.html')
+
+@blue_test.route('/permission2')
+@viewfunclog
+def vf_permission2():
+    return render_template('test_permission2.html')

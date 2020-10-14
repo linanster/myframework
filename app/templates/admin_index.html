@@ -2,6 +2,7 @@
 
 {% block body %}
     {{ super() }}
-    <a href="{{ url_for('blue_admin.vf_config') }}">view flask config</a>
+    <h3>Admin Page</h3>
+    <p>1. <a href="{{ url_for('blue_admin.vf_config') }}">Config</a> - view flask config items<p>
 {% endblock body %}
 

@@ -6,11 +6,12 @@
 
 {% block body %}
     {{ super() }}
-    <p>MyFramework Test</p>
-    <a href="{{ url_for('blue_test.vf_test1') }}">test1_template_func</a> <br>
-    <a href="{{ url_for('blue_test.vf_test2') }}">test2_socketio</a> <br>
-    <a href="#" onclick=openUrl_log()>test3_logmonitor</a> <br>
-    <a href="{{ url_for('blue_test.vf_test4') }}">test4_onlinecmd</a> <br>
-    <a href="{{ url_for('blue_test.vf_test5') }}">test5_myip</a> <br>
+    <h3>Test Page</h3>
+    <p>1. <a href="{{ url_for('blue_test.vf_test1') }}">Test1</a> - test flask template functions<p>
+    <p>2. <a href="{{ url_for('blue_test.vf_test2') }}">Test2</a> - test flask socketio utilities<p>
+    <p>3. <a href="#" onclick=openUrl_log()>Test3</a> - open logmonitor page<p>
+    <p>4. <a href="{{ url_for('blue_test.vf_test4') }}">Test4</a> - implement oneline command by jquery/js/api<p>
+    <p>5. <a href="{{ url_for('blue_test.vf_test5') }}">test5</a> - implement 'MyIP' feature by request.remote_addr<p>
+    <p>6. <a href="{{ url_for('blue_test.vf_test6') }}">Test6</a> - auth examples<p>
 {% endblock body %}
 

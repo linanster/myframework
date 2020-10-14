@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, flash, redirect, url_for
+from flask import Blueprint, request, render_template, flash, redirect, url_for, g
 import os
 from flask_login import login_user, logout_user
 
@@ -31,8 +31,8 @@ def login():
     if not user or not user.verify_password(password):
         return render_template('auth_login.html', warning="login failed!")
     login_user(user)
+    g.user = user
     # 当next_page不为空时，重定向至next_page
-    # next_page 形如 /admin/index
     if next_page:
         return redirect(next_page)
     # 当next_page为空时，重定向至主页

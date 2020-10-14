@@ -18,14 +18,14 @@
 <body>
 {% block body %}
     <a href="{{ url_for('blue_main.vf_index') }}">Home</a> |
-    <a href="#">Contact</a> |
-    <a href="#">About</a>
+    <a href="{{ url_for('blue_admin.vf_index') }}">Admin</a> |
+    <a href="{{ url_for('blue_test.vf_index') }}">Test</a>
     {% block login %}
         {% if current_user.is_authenticated %}
             | Welcome, {{ current_user.username }} |
-            <a href="{{ url_for('blue_auth.logout') }}">logout</a>
+            <a href="{{ url_for('blue_auth.logout') }}">Logout</a>
         {% else %}
-            | <a href="{{ url_for('blue_auth.login') }}">login</a>
+            | <a href="{{ url_for('blue_auth.login') }}">Login</a>
         {% endif %}
     {% endblock login %}
     <br>

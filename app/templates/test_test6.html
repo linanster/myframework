@@ -1,0 +1,9 @@
+{% extends '_mybase.html' %}
+
+{% block body %}
+    {{ super() }}
+    <p>1. <a href="{{url_for('blue_auth.login')}}">Login</a> - login page, without next parameter</p>
+    <p>2. <a href="{{url_for('blue_admin.vf_index')}}">Admin</a> - login and redirect to admin page, with next parameter</p>
+    <p>3. <a href="{{url_for('blue_test.vf_permission1')}}">Permission1</a> - Verify is current user's permission meet Permission1</p>
+    <p>4. <a href="{{url_for('blue_test.vf_permission2')}}">Permission2</a> - Verify is current user's permission meet Permission2</p>
+{% endblock body %}
