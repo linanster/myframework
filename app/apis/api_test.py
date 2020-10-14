@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 import os
 
 from app.lib.mydecorator import viewfunclog
+from app.lib.myauth import http_basic_auth, my_login_required, my_permission_required
 
 from app.myglobals import uploadfolder, topdir
 
@@ -195,6 +196,34 @@ class ResourceTest15(Resource):
             'location': location,
         }
 
+# 101. 验证http_basic_auth.login_required
+class ResourceTest101(Resource):
+    @http_basic_auth.login_required
+    @viewfunclog
+    def get(self):
+        return {
+            'status': 'http_basic_auth login success'
+        }
+# 102. 验证my_login_required
+class ResourceTest102(Resource):
+    @my_login_required
+    @viewfunclog
+    def get(self):
+        return {
+            'status': 'my_login_required login success'
+        }
+# 103. 验证my_permission_required
+class ResourceTest103(Resource):
+    @my_login_required
+    # user1 permission unsufficient
+    # user2 and user3 permission sufficient
+    @my_permission_required(3)
+    @viewfunclog
+    def get(self):
+        return {
+            'status': 'my_permission_required login success'
+        }
+
 
 api_test.add_resource(ResourceTest1, '/test1')
 api_test.add_resource(ResourceTest2, '/test2')
@@ -208,3 +237,6 @@ api_test.add_resource(ResourceTest12, '/test12')
 api_test.add_resource(ResourceTest13, '/test13')
 api_test.add_resource(ResourceTest14, '/test14')
 api_test.add_resource(ResourceTest15, '/test15')
+api_test.add_resource(ResourceTest101, '/test101')
+api_test.add_resource(ResourceTest102, '/test102')
+api_test.add_resource(ResourceTest103, '/test103')
