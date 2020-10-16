@@ -30,14 +30,18 @@ def login():
     user = User.query.filter_by(username=username).first()
     if not user or not user.verify_password(password):
         return render_template('auth_login.html', warning="login failed!")
-    login_user(user)
+    # Default is remember=False
+    login_user(user, remember=False)
+    # login_user(user, remember=True)
     g.user = user
+    return redirect(next_page or url_for('blue_main.vf_index'))
     # 当next_page不为空时，重定向至next_page
-    if next_page:
-        return redirect(next_page)
+    # if next_page:
+    #     return redirect(next_page)
     # 当next_page为空时，重定向至主页
-    else:
-        return redirect(url_for('blue_main.vf_index'))
+    # else:
+    #     return redirect(url_for('blue_main.vf_index'))
+
 
 @blue_auth.route('/logout')
 @viewfunclog

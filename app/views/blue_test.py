@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, flash, redirect, url_for
+from flask import Blueprint, request, render_template, flash, redirect, url_for, g
 import os
 
 from app.lib.mydecorator import viewfunclog
@@ -6,7 +6,7 @@ from app.lib.modelutils import get_running
 from app.lib.socketioutils import send_msg_hello
 from app.views.blue_main import blue_main
 
-from flask_login import login_required
+from flask_login import login_required, fresh_login_required
 from app.lib.myauth import my_login_required, my_permission_required
 
 blue_test = Blueprint('blue_test', __name__, url_prefix='/test')
@@ -44,8 +44,21 @@ def vf_test5():
 def vf_test6():
     return render_template('test_test6.html')
 
+@blue_test.route('/login')
+@login_required
+@viewfunclog
+def vf_login():
+    return "Login success"
+
+@blue_test.route('/freshlogin')
+@fresh_login_required
+@viewfunclog
+def vf_freshlogin():
+    return "Fresh Login success"
 
 @blue_test.route('/permission1')
+# @login_required
+# @my_login_required
 @viewfunclog
 def vf_permission1():
     return render_template('test_permission1.html')
