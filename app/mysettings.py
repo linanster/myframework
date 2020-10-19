@@ -11,4 +11,4 @@ SQLALCHEMY_BINDS = {
 # 'sqlite_db4_hist': 'sqlite:///../sqlite/db4_hist.sqlite3',
 }
 
-
+# SECURITY_UNAUTHORIZED_VIEW = '/index'

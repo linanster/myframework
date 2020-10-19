@@ -7,7 +7,7 @@ from app.lib.socketioutils import send_msg_hello
 from app.views.blue_main import blue_main
 
 from flask_login import login_required, fresh_login_required
-from app.lib.myauth import my_login_required, my_permission_required
+from app.lib.myauth import my_page_permission_required
 
 blue_test = Blueprint('blue_test', __name__, url_prefix='/test')
 
@@ -57,13 +57,15 @@ def vf_freshlogin():
     return "Fresh Login success"
 
 @blue_test.route('/permission1')
-# @login_required
-# @my_login_required
+@login_required
+@my_page_permission_required(1)
 @viewfunclog
 def vf_permission1():
     return render_template('test_permission1.html')
 
 @blue_test.route('/permission2')
+@login_required
+@my_page_permission_required(3)
 @viewfunclog
 def vf_permission2():
     return render_template('test_permission2.html')
