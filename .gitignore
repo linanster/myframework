@@ -12,6 +12,7 @@ logs/*
 scripts/ignore/*
 sqlite/*
 venv/
+cert/*
 # migrations/
 cache/*
 upload/*
@@ -26,3 +27,4 @@ scripts/testapi/1.data
 !doc/.gitkeep
 !cache/.gitkeep
 !upload/.gitkeep
+!cert/.gitkeep

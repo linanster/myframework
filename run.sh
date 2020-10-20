@@ -5,7 +5,7 @@
 # 1.variables definition
 
 usage=$"
-Usage: run.sh [--start] [--stop] [--status] [--init]
+Usage: run.sh [--start [--ssl --nodaemon]] [--stop] [--status] [--init]
               [--logmonitor --start/--stop/--status]
 "
 workdir=$(cd "$(dirname $0)" && pwd)
@@ -38,7 +38,7 @@ function run_init(){
 }
 
 
-function run_start(){
+function run_start_legacy(){
     activate_venv
     if [ "$1" == '--nodaemon' ]; then
         gunicorn --workers 1 --bind 0.0.0.0:4000 --timeout 300 --worker-class eventlet wsgi:application_framework
@@ -50,6 +50,34 @@ function run_start(){
         echo 'wrong options!'
         exit 1
     fi
+    pid=$(ps -ef | fgrep "gunicorn" | grep "application_framework" | awk '{if($3==1) print $2}')
+    echo "$pid"
+    exit 0
+}
+
+function run_start(){
+    activate_venv
+    case "$1$2" in
+        "")
+            gunicorn --daemon --workers 1 --bind 0.0.0.0:4000 --timeout 300 --worker-class eventlet wsgi:application_framework
+            echo 'gunicorn --daemon --workers 1 --bind 0.0.0.0:4000 --timeout 300 --worker-class eventlet wsgi:application_framework'
+            ;;
+        "--nodaemon")
+            gunicorn --workers 1 --bind 0.0.0.0:4000 --timeout 300 --worker-class eventlet wsgi:application_framework
+            echo "gunicorn --workers 1 --bind 0.0.0.0:4000 --timeout 300 --worker-class eventlet wsgi:application_framework"
+            ;;
+        "--ssl")
+            gunicorn --daemon --workers 1 --bind 0.0.0.0:4001 --keyfile ./cert/server.key --certfile ./cert/server.cert --timeout 300 --worker-class eventlet wsgi:application_framework
+            echo 'gunicorn --daemon --workers 1 --bind 0.0.0.0:4001 --keyfile ./cert/server.key --certfile ./cert/server.cert --timeout 300 --worker-class eventlet wsgi:application_framework'
+            ;;
+        "--ssl--nodaemon")
+            gunicorn --workers 1 --bind 0.0.0.0:4001 --keyfile ./cert/server.key --certfile ./cert/server.cert --timeout 300 --worker-class eventlet wsgi:application_framework
+            echo 'gunicorn --workers 1 --bind 0.0.0.0:4001 --keyfile ./cert/server.key --certfile ./cert/server.cert --timeout 300 --worker-class eventlet wsgi:application_framework'
+            ;;
+        *)
+            echo 'wrong options!'
+            exit 1
+    esac
     pid=$(ps -ef | fgrep "gunicorn" | grep "application_framework" | awk '{if($3==1) print $2}')
     echo "$pid"
     exit 0
@@ -134,7 +162,7 @@ if [ $# -ge 1 ]; then
         run_init
         ;;
     --start)
-        run_start $2
+        run_start $2 $3
         ;;
     --status)
         run_status
