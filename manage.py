@@ -23,8 +23,8 @@ def hello():
     print('Hello, Manager Command!')
 
 @manager.command
-# python3 manage.py createdb [--table] [--data] [--hist]
-def createdb(table=False, data=False, hist=False):
+# python3 manage.py createdb_sqlite [--table] [--data] [--hist]
+def createdb_sqlite(table=False, data=False, hist=False):
     "my cmd: create all database and initialize datas"
     from app.models.sqlite import db_sqlite, Sysinfo, Student, User, StatsCount
     print('==create databases==')
@@ -46,8 +46,8 @@ def createdb(table=False, data=False, hist=False):
         StatsCount.seed()
 
 @manager.command
-# python3 manage.py deletedb [--table] [--data] [--hist]
-def deletedb(table=False, data=False, hist=False):
+# python3 manage.py deletedb_sqlite [--table] [--data] [--hist]
+def deletedb_sqlite(table=False, data=False, hist=False):
     "my cmd: delete all database tables and datas"
     from app.models.sqlite import db_sqlite, Sysinfo, Student, User, StatsCount
     if table:

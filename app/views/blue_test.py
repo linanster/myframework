@@ -9,6 +9,8 @@ from app.views.blue_main import blue_main
 from flask_login import login_required, fresh_login_required
 from app.lib.myauth import my_page_permission_required
 
+from app.myglobals import ROLES
+
 blue_test = Blueprint('blue_test', __name__, url_prefix='/test')
 
 @blue_test.route('/')
@@ -58,14 +60,14 @@ def vf_freshlogin():
 
 @blue_test.route('/permission1')
 @login_required
-@my_page_permission_required(1)
+@my_page_permission_required(ROLES.VIEW)
 @viewfunclog
 def vf_permission1():
     return render_template('test_permission1.html')
 
 @blue_test.route('/permission2')
 @login_required
-@my_page_permission_required(3)
+@my_page_permission_required(ROLES.ADMIN)
 @viewfunclog
 def vf_permission2():
     return render_template('test_permission2.html')

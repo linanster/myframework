@@ -10,6 +10,7 @@ from flask_login import UserMixin
 from flask_jwt import jwt
 
 from app.ext.cache import cache
+from app.myglobals import ROLES
 
 db_sqlite = SQLAlchemy(use_native_unicode='utf8')
 
@@ -167,9 +168,9 @@ class User(UserMixin, MyBaseModel):
 
     @staticmethod
     def seed():
-        user1 = User('user1', '123456', 1)
-        user2 = User('user2', '123456', 3)
-        user3 = User('user3', '123456', 7)
+        user1 = User('user1', '123456', ROLES.VIEW)
+        user2 = User('user2', '123456', ROLES.ADMIN)
+        user3 = User('user3', '123456', ROLES.SUPERADMIN)
         seeds = [user1, user2, user3]
         db_sqlite.session.add_all(seeds)
         db_sqlite.session.commit()
