@@ -5,7 +5,7 @@ from flask_login import current_user
 
 from functools import wraps
 
-from app.models.sqlite import User
+from app.models.sqlite import User, Pin
 
 http_basic_auth = HTTPBasicAuth()
 
@@ -26,9 +26,9 @@ def verify_password(username_or_token, password):
 def my_login_required(func):
     # def inner(*args, **kwargs):
     def inner(*args, **kwargs):
-        username = request.form.get('username') or request.args.get('username')
-        password = request.form.get('password') or request.args.get('password')
-        token = request.form.get('token') or request.args.get('token')
+        username = request.form.get('username') or request.args.get('username') or request.headers.get('username')
+        password = request.form.get('password') or request.args.get('password') or request.headers.get('password')
+        token = request.form.get('token') or request.args.get('token') or request.headers.get('token')
 
         # 1. first try to authenticate by token
         user = User.verify_auth_token(token)
@@ -72,3 +72,16 @@ def my_page_permission_required(permission):
             return func(*args, **kwargs)
         return inner2
     return inner1
+
+# pin authentication
+# client pin from header
+# server pin from pin1
+def my_pin1_required(func):
+    def inner(*args, **kwargs):
+        pin1_client = request.headers.get('myauth-pin1')
+        pin1_server = Pin.query.get(1)
+        if not pin1_server.verify(pin1_client):
+            abort(401, status='401', msg='pin1 authentication failed')
+        return func(*args, **kwargs)
+    return inner
+

@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 import os
 
 from app.lib.mydecorator import viewfunclog
-from app.lib.myauth import http_basic_auth, my_login_required, my_permission_required
+from app.lib.myauth import http_basic_auth, my_login_required, my_permission_required, my_pin1_required
 
 from app.myglobals import uploadfolder, topdir
 
@@ -224,6 +224,13 @@ class ResourceTest103(Resource):
             'status': 'my_permission_required login success'
         }
 
+class ResourceTest104(Resource):
+    @my_pin1_required
+    @viewfunclog
+    def get(self):
+        return {
+            'msg': 'my_pin1_required success'
+        }
 
 api_test.add_resource(ResourceTest1, '/test1')
 api_test.add_resource(ResourceTest2, '/test2')
@@ -240,3 +247,4 @@ api_test.add_resource(ResourceTest15, '/test15')
 api_test.add_resource(ResourceTest101, '/test101')
 api_test.add_resource(ResourceTest102, '/test102')
 api_test.add_resource(ResourceTest103, '/test103')
+api_test.add_resource(ResourceTest104, '/test104')

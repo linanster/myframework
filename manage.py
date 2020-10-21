@@ -26,7 +26,7 @@ def hello():
 # python3 manage.py createdb_sqlite [--table] [--data] [--hist]
 def createdb_sqlite(table=False, data=False, hist=False):
     "my cmd: create all database and initialize datas"
-    from app.models.sqlite import db_sqlite, Sysinfo, Student, User, StatsCount
+    from app.models.sqlite import db_sqlite, Sysinfo, Student, User, Pin, StatsCount
     print('==create databases==')
     if table:
         print('==create tables==')
@@ -38,6 +38,7 @@ def createdb_sqlite(table=False, data=False, hist=False):
         Sysinfo.seed()
         Student.seed()
         User.seed()
+        Pin.seed()
     if hist:
         print('legacy command, exit!')
         return 0
@@ -49,7 +50,7 @@ def createdb_sqlite(table=False, data=False, hist=False):
 # python3 manage.py deletedb_sqlite [--table] [--data] [--hist]
 def deletedb_sqlite(table=False, data=False, hist=False):
     "my cmd: delete all database tables and datas"
-    from app.models.sqlite import db_sqlite, Sysinfo, Student, User, StatsCount
+    from app.models.sqlite import db_sqlite, Sysinfo, Student, User, Pin, StatsCount
     if table:
         print('==delete tables==')
         db_sqlite.drop_all(bind='sqlite_db1_sys')
@@ -61,6 +62,7 @@ def deletedb_sqlite(table=False, data=False, hist=False):
         Sysinfo.query.delete()
         Student.query.delete()
         User.query.delete()
+        Pin.query.delete()
         db_sqlite.session.commit()
     if hist:
         print('legacy command, exit!')

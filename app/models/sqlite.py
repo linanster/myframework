@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime
 import time
 import uuid
+import base64
 # from passlib.apps import custom_app_context as pwd_context
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
@@ -88,6 +89,36 @@ class Student(MyBaseModel):
         db_sqlite.session.add_all(seeds)
         db_sqlite.session.commit()
 
+class Pin(MyBaseModel):
+    __bind_key__ = 'sqlite_db3_auth'
+    __tablename__ = 'pins'
+    pinname = db_sqlite.Column(db_sqlite.String(100), nullable=False, unique=True, index=True)
+    _pinstr = db_sqlite.Column(db_sqlite.String(100), nullable=False)
+    desc = db_sqlite.Column(db_sqlite.String(100))
+    def __init__(self, pinname, pinstr, desc):
+        self.pinname = pinname
+        self._pinstr = base64.b64encode(pinstr.encode('utf8')).decode('utf8')
+        self.desc = desc
+
+    @property
+    def pinstr(self):
+        raise Exception('pin string is not accessable')
+        # return self._pinstr
+
+    @pinstr.setter
+    def pinstr(self, pinstr):
+        self._pinstr = base64.b64encode(pinstr.encode('utf8')).decode('utf8')
+
+    def verify(self, pinstr_to_testify):
+        return self._pinstr == pinstr_to_testify
+
+    @staticmethod
+    def seed():
+        pin1 = Pin('pin1', '123456', 'for rasp upload data')
+        pin2 = Pin('pin2', '123456', 'reserved')
+        seeds = [pin1, pin2]
+        db_sqlite.session.add_all(seeds)
+        db_sqlite.session.commit()
 
 # reference:
 # https://www.cnblogs.com/bayueman/p/6612027.html
