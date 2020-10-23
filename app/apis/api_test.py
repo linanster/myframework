@@ -223,7 +223,7 @@ class ResourceTest103(Resource):
         return {
             'status': 'my_permission_required login success'
         }
-
+# 104. 验证my_pin1_required
 class ResourceTest104(Resource):
     @my_pin1_required
     @viewfunclog
